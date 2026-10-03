@@ -1,0 +1,8 @@
+# generated renders / review sheets (large, reproducible with tools/)
+tools/out/
+victory_picks/
+# per-machine settings written by Play.bat's server
+settings.json
+__pycache__/
+*.pyc
+*.zip

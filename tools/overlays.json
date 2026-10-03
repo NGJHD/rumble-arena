@@ -1,0 +1,180 @@
+{
+ "zoro/idle": [
+  {
+   "asset": "katana",
+   "x": 530,
+   "y": 542,
+   "len": 460,
+   "ang": 188,
+   "ax": 0.14,
+   "ay": 0.5
+  }
+ ],
+ "zoro/attack": [
+  {
+   "asset": "katana",
+   "x": 425,
+   "y": 510,
+   "len": 460,
+   "ang": 186,
+   "ax": 0.14,
+   "ay": 0.5
+  }
+ ],
+ "zoro/kick": [
+  {
+   "asset": "katana",
+   "x": 477,
+   "y": 509,
+   "len": 460,
+   "ang": 186,
+   "ax": 0.14,
+   "ay": 0.5
+  }
+ ],
+ "zoro/hurt": [
+  {
+   "asset": "katana",
+   "x": 488,
+   "y": 554,
+   "len": 460,
+   "ang": 194,
+   "ax": 0.14,
+   "ay": 0.5
+  }
+ ],
+ "zoro/block": [
+  {
+   "asset": "katana",
+   "x": 510,
+   "y": 546,
+   "len": 460,
+   "ang": 184,
+   "ax": 0.14,
+   "ay": 0.5
+  }
+ ],
+ "zoro/jump": [
+  {
+   "asset": "katana",
+   "x": 500,
+   "y": 555,
+   "len": 460,
+   "ang": 188,
+   "ax": 0.14,
+   "ay": 0.5
+  }
+ ],
+ "zoro/win": [
+  {
+   "asset": "katana",
+   "x": 522,
+   "y": 553,
+   "len": 460,
+   "ang": 188,
+   "ax": 0.14,
+   "ay": 0.5
+  }
+ ],
+ "zoro/super": [
+  {
+   "asset": "katana",
+   "x": 512,
+   "y": 543,
+   "len": 460,
+   "ang": 186,
+   "ax": 0.14,
+   "ay": 0.5
+  }
+ ],
+ "zoro/ko": [
+  {
+   "asset": "katana",
+   "x": 400,
+   "y": 742,
+   "len": 440,
+   "ang": 177,
+   "ax": 0.5,
+   "ay": 0.5,
+   "behind": true
+  }
+ ],
+ "zoro/upper": [
+  {
+   "asset": "katana",
+   "x": 462,
+   "y": 506,
+   "len": 460,
+   "ang": 190,
+   "ax": 0.14,
+   "ay": 0.5
+  }
+ ],
+ "zoro/special": [
+  {
+   "asset": "katana",
+   "x": 492,
+   "y": 520,
+   "len": 460,
+   "ang": 186,
+   "ax": 0.14,
+   "ay": 0.5
+  }
+ ],
+ "chopper/idle": [
+  {
+   "patch": "attack",
+   "src": [
+    400,
+    412,
+    52,
+    72
+   ],
+   "dst": [
+    395,
+    412
+   ]
+  },
+  {
+   "patch": "attack",
+   "src": [
+    542,
+    404,
+    34,
+    60
+   ],
+   "dst": [
+    537,
+    404
+   ]
+  }
+ ],
+ "chopper/win": [
+  {
+   "patch": "attack",
+   "src": [
+    400,
+    430,
+    46,
+    46
+   ],
+   "dst": [
+    392,
+    427
+   ]
+  },
+  {
+   "patch": "attack",
+   "src": [
+    540,
+    402,
+    32,
+    44
+   ],
+   "dst": [
+    538,
+    404
+   ]
+  }
+ ]
+}

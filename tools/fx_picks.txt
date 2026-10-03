@@ -1,0 +1,3 @@
+# Chosen effect-art candidates. Rebuild with:
+#   python gen_sprites.py fxcut $(grep -v '^#' fx_picks.txt)
+phoenix:1 firefist:2 flamesun:0 slash_blue:1 slash_green:1 slash_ice:1 slash_haki:1 cyclone:2 sandstorm:2 icespear:1 heartarrow:1 rocketfist:1 watershot:1 waterfist:0 cannonball:1 bajrangfist:1 asura:1 manohand:0 magmafist:1 eruption:0 kaidodragon:0 gammaknife:1 quake:0 lightning:0 iceberg:0 blackhole:0 soulghost:1 magmahound:1 icepheasant:1 robindemon:0 crossfire:1 lightsword:1 bluedragon:1 trampolia:0 dragontwister:2 jetfist:2 kongfist:3 katana:1 hook:2
