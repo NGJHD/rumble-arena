@@ -282,7 +282,7 @@ class FightScene {
         if (t >= 170 || (t > 40 && Menu.ok())) { this.phase = 'intro'; this.phaseT = 0; this.darkT = 0; }
         break;
       case 'intro':
-        if (t === 1) { this.banner = { text: 'ROUND ' + this.round, t: 70, col: '#ffffff' }; const need = Settings.data.roundsToWin; const final = this.round > 1 && this.f1.wins === need - 1 && this.f2.wins === need - 1; Announcer.play(this.round === 1 || final ? 'ready' : 'round_' + Math.min(3, this.round)); }
+        if (t === 1) { this.banner = { text: 'ROUND ' + this.round, t: 70, col: '#ffffff' }; Announcer.play('ready'); }
         if (t === 75) { this.banner = { text: 'FIGHT!', t: 40, col: '#ffeb3b' }; Announcer.play('fight'); this.zoomPunch(1.1); this.shake(8); }
         if (t >= 90) { this.phase = 'fight'; this.phaseT = 0; }
         break;
