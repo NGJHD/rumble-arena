@@ -109,7 +109,7 @@ const SUPER_TYPES = {
         }
         if (X.lvl === 3 && fr === 34) {
           // the Mother Flame weapon fires from the sky onto the target
-          g.addEnt(new Pillar({ owner: f, x: f.opp.x, w: 300, h: 720, delay: 10, dur: 44, hits: 10, hitEvery: 4, elem: 'fire', isSuper: true, hit: X.fin({ dmg: Math.round(24 * X.m), hitstun: 44, launch: -18, kb: [4, -18] }) }));
+          g.addEnt(new Pillar({ owner: f, x: f.opp.x, w: 300, h: 720, delay: 10, dur: 44, hits: 8, hitEvery: 5, elem: 'fire', isSuper: true, hit: X.fin({ dmg: Math.round(14 * X.m), hitstun: 44, launch: -18, kb: [4, -18] }) }));
           g.flashT = 12; FX.comic(f.opp.x, 160, 'MOTHER FLAME!', 5);
         }
       },
