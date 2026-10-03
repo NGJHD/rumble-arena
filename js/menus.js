@@ -144,7 +144,6 @@ class SelectScene {
             this.pick[p] = want;
             this.freeCursor(1 - p);
             Sound.play('confirm');
-            Announcer.play('ready');
           }
         } else if (back) {
           if (this.solo && p === 1) { this.locked[0] = false; Sound.play('back'); }
