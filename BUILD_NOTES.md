@@ -1,6 +1,6 @@
 # Build Notes — Rumble Arena
 
-Browser fighting game (plain JS + Canvas, no build step, no dependencies). Play via `Play.bat` (starts `tools/devserver.py`, port 8765) or open `index.html`.
+Browser fighting game (plain JS + Canvas, no build step, no dependencies). Play via `Play.bat` (starts `tools/server.ps1`, port 8765) or open `index.html`.
 
 ## Files (load order matters — classic `<script>` tags, shared globals; ES modules break on `file://`)
 - `sprites/manifest.js`, `sprites/fx_manifest.js` generated sprite/effect lists (load first)
@@ -68,11 +68,11 @@ Browser fighting game (plain JS + Canvas, no build step, no dependencies). Play 
 - Title art: `tools/title_bg.py` composites the cut sprites -> sprites/ui/title_bg.jpg (re-run after sprite changes).
 - Pose size check: compare a stable feature (hat crown, afro) per pose, not face area/template match (turned/shaded faces fool both). Fix with pose_fix `scale`.
 - Swords: check the handle continues the blade in ONE straight line; the model often bends it at the hand (reads as broken). `tools/straighten.py` / `tools/unhand.py` are the hand-edit helpers.
-- Settings: `settings.json` in the repo root via devserver `/settings` (gitignored, auto-created on first run if missing); localStorage `rumble_arena_settings` is the fallback for `file://`. `ver: 2` forced autoFull off once.
+- Settings: `settings.json` in the repo root via the server's `/settings` (gitignored, auto-created on first run if missing); localStorage `rumble_arena_settings` is the fallback for `file://`. `ver` migrations in `Settings.apply`: v2 autoFull off, v3 old default music 0.45 -> 0.2.
 - Title screen layout: heroes left, villains right (owner rule), all faces visible, centre gap for title + menu.
 - Music pipeline: downloads in `tools/out/music_src` (local only) -> `python tools/make_music.py` (ffmpeg, loudnorm -15 LUFS, OGG). Credits in CREDITS.md; only use CC0.
 - Imu kit = canon First Twenty Weapons: s1 Stigma (Omen orb marks, `StigmaStrike` spear drops; the mark must not knock down or the spear can't hit a downed target), s2 Nemesis (beam art), super Honebami Toshiro (Omen serpents), Lv3 adds Mother Flame. Boss AI `BOSS_AI` in ai.js (blocks/reacts far more). Imu is a silhouette on the ladder until battle 8. Black-flame FX art is `cut` from white (additive on black would erase black flames).
-- Play.bat runs `tools/play.ps1`: finds pyw/pythonw/py/python (skips the MS Store stub), waits for the server (TCP check; Invoke-WebRequest stalls), then opens an Edge/Chrome `--app` window with `--autoplay-policy=no-user-gesture-required` and its own profile (%LOCALAPPDATA%/RumbleArena/browser) so title music plays without a keypress. devserver must not use SO_REUSEADDR on Windows (duplicate servers share the port).
+- Play.bat runs `tools/play.ps1`: starts `tools/server.ps1` (PowerShell HttpListener: static files + GET/POST /settings, no Python needed; `tools/devserver.py` is the same for dev / non-Windows), TCP-checks port 8765 (Invoke-WebRequest stalls), then opens an Edge/Chrome `--app` window with `--autoplay-policy=no-user-gesture-required` and its own profile (%LOCALAPPDATA%/RumbleArena/browser). devserver must not use SO_REUSEADDR on Windows. Music blocked by autoplay (normal tab / file://) is retried on the first key, click or pad press (`Sound.init`).
 - Voice clips: most are the owner's recordings (Desktop/Scratchpad/Rumble Arena/audio), silence-trimmed and loudness-matched to -14.5 LUFS, natural speed. The few Kenney ones left are `atempo` 2x and +1 semitone. Every round starts with "Ready"; vs wins say "Player N wins" (+ "Perfect" on a flawless round).
 - Review sheets: `sheet.py`, `base_sheet.py`, `gallery.py`, `gallery_stages.py` → tools/out.
 

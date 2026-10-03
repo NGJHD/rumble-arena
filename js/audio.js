@@ -3,7 +3,12 @@
 const Sound = {
   ctx: null, sfxGain: null, musicGain: null, noiseBuf: null,
   init() {
-    if (this.ctx) { if (this.ctx.state === 'suspended') this.ctx.resume(); return; }
+    if (this.ctx) {
+      if (this.ctx.state === 'suspended') this.ctx.resume();
+      // music that the browser blocked before the first key / click / pad press: start it now
+      if (this.trackEl && this.trackEl.paused) this.trackEl.play().catch(() => {});
+      return;
+    }
     try {
       this.ctx = new (window.AudioContext || window.webkitAudioContext)();
       const comp = this.ctx.createDynamicsCompressor();

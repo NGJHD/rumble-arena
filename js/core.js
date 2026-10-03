@@ -42,13 +42,18 @@ const ec = (e, i) => (ELEM[e] || ELEM.punch)[i];
 const Settings = {
   data: {
     roundsToWin: 2, time: 99, difficulty: 1,
-    sfx: 0.8, music: 0.45, announcer: true, autoFull: false, ver: 2,
+    sfx: 0.8, music: 0.2, announcer: true, autoFull: false, ver: 3,
     padP1: 0, padP2: 1, padMaps: {},
   },
   // Saved to settings.json in the game folder when the game runs through Play.bat (tools/devserver.py);
   // opened straight from index.html the browser can't write files, so it falls back to browser storage.
   served: typeof location !== 'undefined' && location.protocol.startsWith('http'),
-  apply(s) { if (s) { if (!s.ver) { s.autoFull = false; s.ver = 2; } Object.assign(this.data, s); } },   // v1 saved auto fullscreen ON
+  apply(s) {
+    if (!s) return;
+    if (!s.ver) { s.autoFull = false; s.ver = 2; }                          // v1 saved auto fullscreen ON
+    if (s.ver < 3) { if (s.music === 0.45) s.music = 0.2; s.ver = 3; }       // old default music volume -> 2 bars
+    Object.assign(this.data, s);
+  },
   load() {
     try { this.apply(JSON.parse(localStorage.getItem('rumble_arena_settings'))); } catch (e) { /* storage blocked */ }
     if (!this.served) return;

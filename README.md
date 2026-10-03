@@ -3,9 +3,9 @@
 A flashy 1v1 fighting game with 25 chibi One Piece fighters, made for kids. Plain HTML + JavaScript: no install, no build step.
 
 ## Play
-- **Windows:** double-click **`Play.bat`**. It starts a tiny local server (needs [Python](https://www.python.org/) installed) and opens the game in your browser. Settings are saved to `settings.json` in this folder.
-- **Any OS:** run `python tools/devserver.py`, then open http://localhost:8765/index.html
-- Double-clicking `index.html` also works, but then settings are only kept inside that browser.
+- **Windows:** double-click **`Play.bat`**. It starts a tiny local server (plain PowerShell, nothing to install) and opens the game in its own window with the music playing. Settings are saved to `settings.json` in this folder.
+- **Mac / Linux:** run `python3 tools/devserver.py`, then open http://localhost:8765/index.html
+- Double-clicking `index.html` also works, but settings then stay inside that browser and the music starts on your first key press.
 - Press **F** for fullscreen. Chrome or Edge recommended.
 
 ## Modes
@@ -32,7 +32,7 @@ A flashy 1v1 fighting game with 25 chibi One Piece fighters, made for kids. Plai
 **Joysticks / gamepads / arcade sticks:** plug in, press a button on it, then **Options → Controls** → choose which player uses which controller → **Set up controller buttons** if the buttons are mixed up.
 
 ## Settings file
-`settings.json` holds rounds, timer, volumes, fullscreen and controller setup. It is created automatically the first time the game runs through `Play.bat` / the server, and re-created if you delete it (from the defaults, or from what that browser last remembered). It is not in the repo (each PC keeps its own).
+`settings.json` holds rounds, timer, volumes, fullscreen and controller setup. It is created automatically the first time the game runs through `Play.bat`, and re-created if you delete it (from the defaults, or from what that browser last remembered). It is not in the repo (each PC keeps its own).
 
 ## For developers
 - Notes for the code, art pipeline and tests: [`BUILD_NOTES.md`](BUILD_NOTES.md).
