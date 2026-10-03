@@ -42,7 +42,7 @@ const ec = (e, i) => (ELEM[e] || ELEM.punch)[i];
 const Settings = {
   data: {
     roundsToWin: 2, time: 99, difficulty: 1,
-    sfx: 0.8, music: 0.2, announcer: true, autoFull: false, ver: 3,
+    sfx: 0.8, music: 0.4, announcer: true, autoFull: false, ver: 4,
     padP1: 0, padP2: 1, padMaps: {},
   },
   // Saved to settings.json in the game folder when the game runs through Play.bat (tools/devserver.py);
@@ -51,7 +51,7 @@ const Settings = {
   apply(s) {
     if (!s) return;
     if (!s.ver) { s.autoFull = false; s.ver = 2; }                          // v1 saved auto fullscreen ON
-    if (s.ver < 3) { if (s.music === 0.45) s.music = 0.2; s.ver = 3; }       // old default music volume -> 2 bars
+    if (s.ver < 4) { if (s.music === 0.45 || s.music === 0.2) s.music = 0.4; s.ver = 4; }   // earlier default music volumes -> 4 bars
     Object.assign(this.data, s);
   },
   load() {
