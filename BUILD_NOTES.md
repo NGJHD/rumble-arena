@@ -73,7 +73,7 @@ Browser fighting game (plain JS + Canvas, no build step, no dependencies). Play 
 - Music pipeline: downloads in `tools/out/music_src` (local only) -> `python tools/make_music.py` (ffmpeg, loudnorm -15 LUFS, OGG). Credits in CREDITS.md; only use CC0.
 - Imu kit = canon First Twenty Weapons: s1 Stigma (Omen orb marks, `StigmaStrike` spear drops; the mark must not knock down or the spear can't hit a downed target), s2 Nemesis (beam art), super Honebami Toshiro (Omen serpents), Lv3 adds Mother Flame. Boss AI `BOSS_AI` in ai.js (blocks/reacts far more). Imu is a silhouette on the ladder until battle 8. Black-flame FX art is `cut` from white (additive on black would erase black flames).
 - Play.bat runs `tools/play.ps1`: finds pyw/pythonw/py/python (skips the MS Store stub), waits for the server (TCP check; Invoke-WebRequest stalls), then opens an Edge/Chrome `--app` window with `--autoplay-policy=no-user-gesture-required` and its own profile (%LOCALAPPDATA%/RumbleArena/browser) so title music plays without a keypress. devserver must not use SO_REUSEADDR on Windows (duplicate servers share the port).
-- Voice clips: Kenney originals, `atempo` 2x faster and +1 semitone (owner asked), see the ffmpeg note in git history / rebuild from tools/out/voice_src.
+- Voice clips: most are the owner's recordings (Desktop/Scratchpad/Rumble Arena/audio), silence-trimmed and loudness-matched to -14.5 LUFS, natural speed. The few Kenney ones left are `atempo` 2x and +1 semitone. Round 1 and the final round say "Ready"; vs wins say "Player N wins" (+ "Perfect" on a flawless round).
 - Review sheets: `sheet.py`, `base_sheet.py`, `gallery.py`, `gallery_stages.py` → tools/out.
 
 ## Testing (`node tools/tests/<file>.js` from the repo root; headless vm + fake canvas)

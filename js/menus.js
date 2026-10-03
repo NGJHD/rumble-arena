@@ -43,7 +43,7 @@ class TitleScene {
       Sound.play('confirm');
       MenuMem.title = this.sel;
       const it = this.items[this.sel];
-      if (it === 'ARCADE') { Announcer.play('arcade_mode'); Game.goto(new DifficultyScene()); }
+      if (it === 'ARCADE') Game.goto(new DifficultyScene());
       if (it === 'VERSUS') { Announcer.play('battle_mode'); Game.goto(new SelectScene('vs')); }
       if (it === 'TRAINING') Game.goto(new SelectScene('training'));
       if (it === 'OPTIONS') Game.goto(new OptionsScene());
@@ -90,7 +90,7 @@ class SelectScene {
     this.n = ROSTER.length + 1; // last = random
     this.cur = [0, 1]; this.locked = [false, false]; this.pick = [null, null];
     this.solo = mode !== 'vs';
-    Announcer.play('choose', mode === 'vs' ? 1.1 : 0.2);
+    Announcer.play('get_ready', mode === 'vs' ? 1.1 : 0.2);
     this.arcade = mode === 'arcade';   // arcade: only you pick; opponents and stages come from the ladder
     Sound.playMusic('menu');
   }

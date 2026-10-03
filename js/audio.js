@@ -214,8 +214,8 @@ const Announcer = {
     this.bus = { dry, wet };
     return this.bus;
   },
-  // play(clip[, delaySeconds]). Clips: round_1..3 final_round fight time tie you_win you_lose winner player_1 player_2
-  // flawless combo prepare choose arcade_mode battle_mode game_over ready congratulations power_up go
+  // play(clip[, delaySeconds]). Clips: ready (round 1 + final round) round_2 round_3 fight ko time tie you_win you_lose
+  // player_1_wins player_2_wins perfect get_ready battle_mode game_over congratulations power_up
   play(clip, delay) {
     if (!Settings.data.announcer || !Sound.ctx) return;
     const url = 'sounds/voice/' + clip + '.ogg';

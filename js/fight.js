@@ -130,7 +130,7 @@ class FightScene {
     def.knockOnLand = true; def.state = 'hit'; def.hitstun = 999;
     if (!def.airborne) def.vy = -13;
     def.vx = (def.x > att.x ? 1 : -1) * 9;
-    Sound.play('ko');
+    Sound.play('ko'); Announcer.play('ko');
     FX.hitSpark(def.x, def.y - def.height * 0.6, att.ch.elem, 4, att.facing);
   }
 
@@ -282,7 +282,7 @@ class FightScene {
         if (t >= 170 || (t > 40 && Menu.ok())) { this.phase = 'intro'; this.phaseT = 0; this.darkT = 0; }
         break;
       case 'intro':
-        if (t === 1) { this.banner = { text: 'ROUND ' + this.round, t: 70, col: '#ffffff' }; const need = Settings.data.roundsToWin; Announcer.play(this.round > 1 && this.f1.wins === need - 1 && this.f2.wins === need - 1 ? 'final_round' : 'round_' + Math.min(3, this.round)); }
+        if (t === 1) { this.banner = { text: 'ROUND ' + this.round, t: 70, col: '#ffffff' }; const need = Settings.data.roundsToWin; const final = this.round > 1 && this.f1.wins === need - 1 && this.f2.wins === need - 1; Announcer.play(this.round === 1 || final ? 'ready' : 'round_' + Math.min(3, this.round)); }
         if (t === 75) { this.banner = { text: 'FIGHT!', t: 40, col: '#ffeb3b' }; Announcer.play('fight'); this.zoomPunch(1.1); this.shake(8); }
         if (t >= 90) { this.phase = 'fight'; this.phaseT = 0; }
         break;
@@ -305,8 +305,8 @@ class FightScene {
             this.winner.wins++; this.winner.setState('win'); this.winner.atk = null;
             this.banner = { text: (this.winner === this.f1 ? (this.mode === 'cpu' ? 'YOU' : 'P1') : (this.mode === 'cpu' ? 'CPU' : 'P2')) + ' WIN' + (this.winner === this.f1 && this.mode === 'cpu' ? '!' : 'S!'), t: 140, col: '#ffeb3b' };
             const flawless = this.winner.hp >= MAX_HP;
-            if (this.mode === 'vs') { Announcer.play(this.winner === this.f1 ? 'player_1' : 'player_2'); Announcer.play(flawless ? 'flawless' : 'winner', 0.9); }
-            else if (this.winner === this.f1) Announcer.play(flawless ? 'flawless' : 'you_win');
+            if (this.mode === 'vs') { Announcer.play(this.winner === this.f1 ? 'player_1_wins' : 'player_2_wins'); if (flawless) Announcer.play('perfect', 1.6); }
+            else if (this.winner === this.f1) Announcer.play(flawless ? 'perfect' : 'you_win');
             else Announcer.play('you_lose');
           } else { this.banner = { text: 'DRAW!', t: 140, col: '#ffffff' }; Announcer.play('tie'); }
         }
