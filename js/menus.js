@@ -31,7 +31,7 @@ const TITLE_BG = new Image(); TITLE_BG.src = 'sprites/ui/title_bg.jpg';
 
 class TitleScene {
   constructor() {
-    this.t = 0; this.sel = MenuMem.title; this.started = !!Sound.ctx;
+    this.t = 0; this.sel = MenuMem.title; this.started = !!Game.titleSeen; Game.titleSeen = true;
     this.items = ['ARCADE', 'VERSUS', 'TRAINING', 'OPTIONS'];
     Sound.playMusic('menu');
   }

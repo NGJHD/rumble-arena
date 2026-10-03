@@ -43,7 +43,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         pass
 
 
-socketserver.TCPServer.allow_reuse_address = True
+# on Windows SO_REUSEADDR lets a second server bind the same port, so only enable it elsewhere
+socketserver.TCPServer.allow_reuse_address = os.name != 'nt'
 if __name__ == '__main__':
     with socketserver.ThreadingTCPServer(('', 8765), Handler) as httpd:
         httpd.serve_forever()

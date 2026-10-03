@@ -119,7 +119,7 @@ class FightScene {
     if (str >= 3) { Sound.elem(h.elem); this.zoomPunch(1.06 + str * 0.015); this.speedT = Math.max(this.speedT, 10); }
     if (h.finisher || (def.comboTaken >= 10 && (h.knockdown || h.slam))) { this.slowmo = Math.max(this.slowmo, 30); this.flashT = 4; this.zoomPunch(1.2); }
     const side = att === this.f1 ? 0 : 1;
-    for (const [n, word] of PRAISE) if (def.comboTaken === n) { this.praise[side] = { word, t: 70 }; Sound.play('pop'); if (n === 12) Announcer.play('combo'); }
+    for (const [n, word] of PRAISE) if (def.comboTaken === n) { this.praise[side] = { word, t: 70 }; Sound.play('pop'); }
     return 'hit';
   }
   onKO(att, def) {

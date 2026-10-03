@@ -34,13 +34,16 @@ window.addEventListener('mousedown', () => Sound.init());
 
 Sprites.init();
 FXImg.init();
+// create audio right away so the title music starts on the "press any button" screen whenever the browser allows it
+// (Play.bat's app window allows autoplay; a normal tab starts it on the first key / click / pad press)
+Sound.init();
 Game.goto(new TitleScene());
 
 const STEP = 1000 / 60;
 let last = performance.now(), acc = 0;
 function step() {
   Input.pollPads();
-  if (!Input.anyPressedFlag && Input.pads.some(p => p.buttons.some(b => b.pressed))) Input.anyPressedFlag = !Game._padHeld;
+  if (!Input.anyPressedFlag && Input.pads.some(p => p.buttons.some(b => b.pressed))) { Input.anyPressedFlag = !Game._padHeld; Sound.init(); }
   Game._padHeld = Input.pads.some(p => p.buttons.some(b => b.pressed));
   P1In.poll(); P2In.poll(); AnyIn.poll();
   Game.scene.update();

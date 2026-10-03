@@ -3,7 +3,10 @@ $root = Split-Path -Parent $PSScriptRoot
 $url = 'http://localhost:8765/index.html'
 
 function Test-Server {
-    try { Invoke-WebRequest -UseBasicParsing $url -TimeoutSec 1 | Out-Null; return $true } catch { return $false }
+    # plain TCP connect: instant (Invoke-WebRequest can stall on proxy detection)
+    $c = New-Object System.Net.Sockets.TcpClient
+    try { $ok = $c.ConnectAsync('127.0.0.1', 8765).Wait(500) -and $c.Connected } catch { $ok = $false }
+    $c.Close(); return $ok
 }
 
 if (-not (Test-Server)) {
@@ -33,4 +36,16 @@ if (-not (Test-Server)) {
         exit 1
     }
 }
-Start-Process $url
+# Open as its own app window (Edge or Chrome) with autoplay allowed, so the title music starts straight away.
+# A separate profile folder makes the flags apply even when the browser is already open.
+$browsers = @(
+    "${env:ProgramFiles(x86)}\Microsoft\Edge\Application\msedge.exe", "$env:ProgramFiles\Microsoft\Edge\Application\msedge.exe",
+    "$env:ProgramFiles\Google\Chrome\Application\chrome.exe", "${env:ProgramFiles(x86)}\Google\Chrome\Application\chrome.exe",
+    "$env:LOCALAPPDATA\Google\Chrome\Application\chrome.exe")
+$exe = $browsers | Where-Object { $_ -and (Test-Path $_) } | Select-Object -First 1
+if ($exe) {
+    $profDir = Join-Path $env:LOCALAPPDATA (Join-Path 'RumbleArena' 'browser')
+    Start-Process -FilePath $exe -ArgumentList @("--app=$url", '--autoplay-policy=no-user-gesture-required', "--user-data-dir=`"$profDir`"", '--start-maximized', '--no-first-run', '--no-default-browser-check')
+} else {
+    Start-Process $url
+}
