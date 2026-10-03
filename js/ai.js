@@ -5,11 +5,18 @@ const AI_LEVELS = [
   { name: 'NORMAL', react: 16, block: 0.4, combo: 0.8, special: 0.3, superP: 0.35, idle: 0.12, dmg: 1 },
   { name: 'HARD', react: 7, block: 0.75, combo: 1, special: 0.4, superP: 0.8, idle: 0, dmg: 1.1 },
 ];
+// arcade boss (Imu), by arcade difficulty: blocks most attacks, reacts fast, uses specials and supers often
+const BOSS_AI = [
+  { name: 'BOSS', react: 14, block: 0.6, combo: 0.85, special: 0.35, superP: 0.5, idle: 0.05, dmg: 1 },
+  { name: 'BOSS', react: 9, block: 0.8, combo: 1, special: 0.45, superP: 0.75, idle: 0, dmg: 1.1 },
+  { name: 'BOSS', react: 6, block: 0.92, combo: 1, special: 0.5, superP: 0.9, idle: 0, dmg: 1.2 },
+];
 const RANGED = ['proj', 'wave', 'beam', 'pillar', 'stretch'];
 
 class CpuInput {
-  constructor(level) {
+  constructor(level, boss) {
     this.level = level; // -1 = training dummy
+    this.boss = !!boss;
     this.held = {}; this.pressed = {};
     for (const a of ACTIONS) { this.held[a] = false; this.pressed[a] = false; }
     this.timer = 20; this.plan = { type: 'idle', t: 30 }; this.blockDecision = null; this.mash = 0;
@@ -19,7 +26,7 @@ class CpuInput {
   think(me, opp, g) {
     this.clear();
     if (this.level < 0 || !g.controlsLive) return;
-    const L = AI_LEVELS[this.level];
+    const L = this.boss ? BOSS_AI[this.level] : AI_LEVELS[this.level];
     const dx = opp.x - me.x, dist = Math.abs(dx);
     const toward = dx > 0 ? 'right' : 'left', away = dx > 0 ? 'left' : 'right';
     const press = b => { this.pressed[b] = true; this.held[b] = true; };

@@ -284,8 +284,8 @@ const STAGES = [
   paintedStage('marineford', 'MARINEFORD', 'marineford', 'marineford'),
   paintedStage('wano', 'WANO COUNTRY', 'wano', 'wano'),
   paintedStage('alabasta', 'ALABASTA', 'alabasta', 'alabasta'),
-  paintedStage('enies', 'ENIES LOBBY', 'marineford', 'marineford'),
-  paintedStage('skyisland', 'SKY ISLAND', 'sunny', 'sunny'),
+  paintedStage('enies', 'ENIES LOBBY', 'enies', 'marineford'),
+  paintedStage('skyisland', 'SKY ISLAND', 'skyisland', 'sunny'),
   paintedStage('thriller', 'THRILLER BARK', 'thriller', 'marineford'),
   paintedStage('elbaph', 'ELBAPH', 'elbaph', 'marineford'),
 ];

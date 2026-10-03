@@ -225,6 +225,11 @@ STAGES = {
 # mode 'cut' = rendered on pure white and cut out (solid objects)
 FX_STYLE = 'anime game effect art, vivid colors, clean shapes, highly detailed, centered, nothing else in the image'
 FX_ASSETS = {
+    # Imu (First Twenty Weapons / Omen): black flames, so cut from white instead of additive on black
+    'omenorb':     ('cut', 768, 768, 'a sentient fireball of pitch black flames with a glowing crimson red outline and one big glaring red eye in its center, flying to the right, black flames trailing behind it to the left, plain pure white background'),
+    'stigma':      ('cut', 512, 1024, 'a huge ancient black spear wreathed in pitch black flames with glowing crimson edges, pointing straight down like it is falling from the sky, ornate black and gold cross guard at the top, plain pure white background'),
+    'nemesis':     ('cut', 1024, 384, 'a long horizontal blade made of pitch black flame with a glowing crimson red edge, shooting to the right out of an ornate golden sword crossguard on the far left, sharp point on the right, plain pure white background'),
+    'omensnake':   ('cut', 1024, 512, 'a giant serpent made of pitch black flames with a demonic horned head, many glaring red eyes and open fanged jaws, lunging to the right, its flaming body trailing to the left, glowing crimson red edges, plain pure white background'),
     'phoenix':     ('add', 1024, 768, 'a majestic phoenix bird made entirely of blazing orange, yellow and red fire, wings spread wide, long flaming tail feathers, flying to the right, side view, on a pure black background'),
     'firefist':    ('add', 1024, 640, 'a giant fist made of roaring orange fire flying to the right, long flame trail streaming behind it, side view, on a pure black background, the whole effect fully inside the frame with a wide empty margin on every side, nothing cut off'),
     'flamesun':    ('add', 1024, 1024, 'a gigantic blazing sun made of swirling fire, bright yellow-white core, orange and red flames licking outward, on a pure black background'),
@@ -268,6 +273,7 @@ FX_ASSETS = {
 
 # How each effect image is oriented: mirror at cut time, base direction, or always upright
 FX_META = {
+    'stigma': {'upright': True},
     'slash_blue': {'mirror': True}, 'slash_green': {'mirror': True}, 'slash_ice': {'mirror': True}, 'slash_haki': {'mirror': True},
     'magmafist': {'rot': -1.5708}, 'cyclone': {'upright': True}, 'sandstorm': {'upright': True}, 'lightning': {'upright': True},
     'eruption': {'upright': True}, 'iceberg': {'upright': True}, 'kaidodragon': {'upright': True}, 'manohand': {'upright': True},

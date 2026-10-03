@@ -102,7 +102,9 @@ function buildSpecialBase(spec, ch) {
               owner: f, x: sp.x - Math.abs(k) * 20 * f.facing, y: sp.y + k * 36, vx: f.facing * (spec.speed || 12),
               vy: spec.from ? clamp((f.opp.y - f.opp.height * 0.5 - sp.y) / Math.max(10, Math.abs(f.opp.x - sp.x) / (spec.speed || 12)), -6, 6) : k * 0.4,
               r: spec.r || 30, sprite: spec.sprite || 'orb', art: spec.art, artK: spec.artK, artSpin: spec.artSpin, elem: e, hits, hitEvery: 8, life: 140, clash: true,
-              hit: fin({ dmg: Math.round(D * (n > 1 ? 1.3 / n : 1) / hits), hitstun: 30, kb: [7, -8], launch: -8, strength: 2 }),
+              hit: fin(spec.stigma ? { dmg: Math.round(D * 0.35), hitstun: 50, kb: [2, 0], launch: 0, knockdown: false, strength: 2, keepAir: true }
+                : { dmg: Math.round(D * (n > 1 ? 1.3 / n : 1) / hits), hitstun: 30, kb: [7, -8], launch: -8, strength: 2 }),
+              onHitFn: spec.stigma ? (def, gg) => gg.addEnt(new StigmaStrike({ owner: f, x: def.x, elem: e, hit: fin({ dmg: Math.round(D * 0.65), hitstun: 44, kb: [4, -16], launch: -16 }) })) : null,
             }));
           }
           Sound.play('proj'); Sound.elem(e);
@@ -170,7 +172,7 @@ function buildSpecialBase(spec, ch) {
       return Object.assign(base, {
         startup: 40, active: 1, recovery: 12, pose: 'charge', spritePose: 'super', gravity: false, invuln: [0, 53], cd: spec.dur + 360,
         onFrame(f, fr, g) {
-          if (fr === 1) { Sound.play('super'); Announcer.say(spec.name + '!', 1.2); g.zoomPunch(1.15); g.darkT = 40; }
+          if (fr === 1) { Sound.play('super'); Announcer.play('power_up'); g.zoomPunch(1.15); g.darkT = 40; }
           if (fr < 40 && fr % 3 === 0) FX.smoke(f.x + rand(-40, 40), f.y - f.height * rand(0.2, 0.9), 3, 'rgba(255,255,255,0.85)');
           if (fr === 40) {
             f.form = spec.form; f.formT = spec.dur;

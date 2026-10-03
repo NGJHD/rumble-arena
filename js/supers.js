@@ -94,21 +94,22 @@ const SUPER_TYPES = {
     });
   },
   // Garp: Galaxy Impact. A leaping punch that explodes into a giant dome
-  kinghaki(spec, ch, X) {
+  // Imu: Honebami Toshiro. One cleave and two Omen serpents with demonic heads lunge across the screen
+  honebami(spec, ch, X) {
     return Object.assign(X.base, {
-      startup: 14, active: 46, recovery: 26, pose: 'charge', spritePose: 'super', gravity: true,
+      startup: 12, active: 40, recovery: 26, pose: 'charge', gravity: true,
+      spritePose: (f, fr) => (fr < 14 ? 'windup' : 'attack'),
       onFrame(f, fr, g) {
-        if (fr > 6 && fr < 60 && fr % 2 === 0) for (let i = 0; i < 2; i++) {
-          const a = rand(0, TAU), r = rand(80, 380);
-          FX.bolt(f.x, f.y - f.height * 0.6, f.x + Math.cos(a) * r, f.y - f.height * 0.6 + Math.sin(a) * r * 0.6, choice(['#111111', '#d50000', '#4a148c']), 8, 5);
+        if (fr === 2) { g.darkT = 70; FX.label(f.x, f.y - f.height - 40, 'HONEBAMI TOSHIRO', '#ff1744', 28); }
+        if (fr === 14 || fr === 22) {
+          const hp = handPt(f, 'attack') || spawnPt(f), hi = fr === 14;
+          g.addEnt(new Proj({ owner: f, x: hp.x, y: f.y - (hi ? 125 : 55) * f.hs, vx: f.facing * 8, vy: 0, r: 58, sprite: 'fireball', art: 'omensnake', artK: 2.3, elem: 'dark',
+            hits: X.lvl === 3 ? 6 : 5, hitEvery: 3, life: 170, isSuper: true, hit: X.fin({ dmg: Math.round(24 * X.m), hitstun: 40, kb: [12, -12], launch: -12 }) }));
+          Sound.play('dark'); g.shake(10);
         }
-        if (fr === 15) {
-          g.addEnt(new Dome({ owner: f, x: f.x, y: f.y - f.height * 0.5, rMax: 420 * X.big, life: 44, hits: X.lvl === 3 ? 10 : 7, hitEvery: 4, elem: 'dark', isSuper: true, hit: X.fin({ dmg: Math.round(26 * X.m), hitstun: 46, kb: [15, -14], launch: -14 }) }));
-          g.shake(24); g.flashT = 8; g.darkT = 60; Sound.play('ko'); FX.comic(f.x, f.y - 240, 'KNEEL!', 4);
-        }
-        if (X.lvl === 3 && fr === 40) {
+        if (X.lvl === 3 && fr === 34) {
           // the Mother Flame weapon fires from the sky onto the target
-          g.addEnt(new Pillar({ owner: f, x: f.opp.x, w: 300, h: 720, delay: 8, dur: 44, hits: 10, hitEvery: 4, elem: 'fire', isSuper: true, hit: X.fin({ dmg: Math.round(24 * X.m), hitstun: 44, launch: -18, kb: [4, -18] }) }));
+          g.addEnt(new Pillar({ owner: f, x: f.opp.x, w: 300, h: 720, delay: 10, dur: 44, hits: 10, hitEvery: 4, elem: 'fire', isSuper: true, hit: X.fin({ dmg: Math.round(24 * X.m), hitstun: 44, launch: -18, kb: [4, -18] }) }));
           g.flashT = 12; FX.comic(f.opp.x, 160, 'MOTHER FLAME!', 5);
         }
       },
@@ -443,3 +444,32 @@ const EXTRA_SPRITES = {
     ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(Math.sin(p.t * 0.15) * 0.15); ctx.drawImage(img, -w / 2, -h / 2, w, h); ctx.restore();
   },
 };
+
+// Imu's Stigma: a toll of the Omen bell marks the target, then the black spear falls on it (follows the target until it drops)
+class StigmaStrike extends Ent {
+  constructor(o) { super(Object.assign({ life: 44, hits: 1, hitEvery: 99, drop: 22 }, o)); }
+  rect() { return this.t > this.drop && this.t < this.drop + 10 ? { x: this.x - 55, y: GROUND_Y - 380, w: 110, h: 380 } : null; }
+  update(g) {
+    super.update(g);
+    if (this.t === 1) { Sound.play('drum'); FX.comic(this.x, GROUND_Y - 330, 'STIGMA!', 3); }
+    if (this.t < this.drop - 6) this.x += (this.owner.opp.x - this.x) * 0.25;   // homes in on the marked target
+    if (this.t === this.drop) { Sound.play('explode'); g.shake(14); FX.burst(this.x, GROUND_Y - 10, 'dark', 26, 10, 9, 28); }
+  }
+  draw(ctx) {
+    const t = this.t, x = this.x;
+    if (t < this.drop) {   // the mark: a pulsing red eye on the target
+      const k = 0.6 + Math.sin(t * 0.9) * 0.4;
+      ctx.globalAlpha = k; ctx.strokeStyle = '#ff1744'; ctx.lineWidth = 5;
+      ctx.beginPath(); ctx.ellipse(x, GROUND_Y - 6, 70, 14, 0, 0, TAU); ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(x, GROUND_Y - 200, 26, 12, 0, 0, TAU); ctx.stroke(); circ(ctx, x, GROUND_Y - 200, 7, '#ff1744', false);
+      ctx.globalAlpha = 1;
+    }
+    const fall = Math.min(1, Math.max(0, (t - this.drop + 8) / 8));
+    if (fall > 0) {
+      const tipY = lerp(-100, GROUND_Y + 30, fall), fade = Math.min(1, this.life / 10);
+      if (!drawArt(ctx, 'stigma', x, tipY, 420, { ay: 1, alpha: fade })) {
+        ctx.fillStyle = '#111'; ctx.fillRect(x - 10, tipY - 420, 20, 420);
+      }
+    }
+  }
+}

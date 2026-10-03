@@ -184,7 +184,7 @@ const KITS = {
     speed: 2, power: 1.15,
     L1: { reach: 1.5, fx: [ARC.red] }, L2: { reach: 1.5, fx: [ARC.red] }, L3: { pose: 'kick', fx: ['dark'] },
     M1: { reach: 1.7, fx: [ARC.red, 'slash'] }, M2: { pose: 'kick', fx: ['dark', 'haki'] },
-    H1: { pose: 'special', proj: { sprite: 'fireball', elem: 'dark', speed: 15, r: 24, dmg: 55, count: 2, spread: 22 }, call: 'Stigma' },
+    H1: { reach: 1.8, fx: [ARC.red, 'fire', 'quake'], elem: 'fire', call: 'Axe of Xingtian' },
     L4: { fx: [ARC.red, 'dark'] }, A4: { fx: ['dark', 'haki'] },
   },
   bigmom: {

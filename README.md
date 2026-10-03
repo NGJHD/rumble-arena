@@ -9,7 +9,7 @@ A flashy 1v1 fighting game with 25 chibi One Piece fighters, made for kids. Plai
 - Press **F** for fullscreen. Chrome or Edge recommended.
 
 ## Modes
-- **Arcade** – pick a fighter and difficulty, then win 8 battles in a row. Opponents and stages are chosen for you, and the 8th battle is the final boss **Imu**. Beat him to see your fighter's ending art.
+- **Arcade** – pick a fighter and difficulty, then win 8 battles in a row. Opponents and stages are chosen for you, and the 8th battle is the final boss **Imu**. His face stays hidden until you reach him. Beat him to see your fighter's ending art.
 - **Versus** – two players, each picks a fighter (the same fighter can't be picked twice) and a stage.
 - **Training** – practise on a dummy with full super meter.
 - **Options** – rounds, timer, volumes, announcer, fullscreen, and **Controls** (controller setup).
@@ -38,6 +38,9 @@ A flashy 1v1 fighting game with 25 chibi One Piece fighters, made for kids. Plai
 - Notes for the code, art pipeline and tests: [`BUILD_NOTES.md`](BUILD_NOTES.md).
 - Art was generated with a local ComfyUI pipeline in `tools/` (not needed to play).
 - Tests: `node tools/tests/<name>.js` from the repo root.
+
+## Credits
+Music and announcer voice are CC0 tracks from OpenGameArt and Kenney: see [`CREDITS.md`](CREDITS.md).
 
 ## Disclaimer
 Unofficial, non-commercial fan project. One Piece and all its characters belong to Eiichiro Oda, Shueisha and Toei Animation. This project is not affiliated with or endorsed by them.

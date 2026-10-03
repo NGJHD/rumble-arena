@@ -218,9 +218,12 @@ const BOSSES = [
     id: 'imu', name: 'IMU', full: 'Imu', group: 2, style: 'sword', elem: 'dark', boss: true,
     quote: 'Ants can never stop me!',
     look: { skin: '#6d4c41', scale: 1.45, build: 'big', hair: { style: 'longwild', color: '#f5f5f5' }, eyes: 'sharp', mouth: 'smirk', extras: ['horns'], top: { style: 'shirtless' }, sleeves: 'none', sash: '#fbc02d', bottom: { style: 'pants', color: '#212121' }, coat: { type: 'cape', color: '#111', color2: '#b71c1c' }, shoes: '#111', weapon: 'nodachi' },
-    s1: { type: 'proj', name: 'Omen', elem: 'dark', sprite: 'fireball', dmg: 70, speed: 12, r: 30, count: 3 },
-    s2: { type: 'teleport', name: 'Abyss', elem: 'dark', dmg: 90 },
-    su: { type: 'kinghaki', name: 'Supreme King Haki', maxName: 'Mother Flame', elem: 'dark', power: 1.2 },
+    // Stigma: a sentient Omen fireball marks the target, a bell tolls, the weapon Stigma falls on it
+    s1: { type: 'proj', name: 'Stigma', elem: 'dark', sprite: 'fireball', art: 'omenorb', artK: 2.6, dmg: 95, speed: 9, r: 30, count: 1, stigma: true },
+    // Nemesis: a blade of Omen flame shoots out of the crossguard and impales
+    s2: { type: 'beam', name: 'Nemesis', elem: 'dark', art: 'nemesis', dmg: 95, big: 1.1 },
+    // Honebami Toshiro: the sword's Omen serpents with demonic heads lunge; Lv3 adds the Mother Flame from the sky
+    su: { type: 'honebami', name: 'Honebami Toshiro', maxName: 'Mother Flame', elem: 'dark', power: 1.2 },
   },
 ];
 const charById = id => ROSTER.find(c => c.id === id) || BOSSES.find(c => c.id === id);

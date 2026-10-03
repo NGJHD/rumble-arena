@@ -6,7 +6,7 @@ Browser fighting game (plain JS + Canvas, no build step, no dependencies). Play 
 - `sprites/manifest.js`, `sprites/fx_manifest.js` generated sprite/effect lists (load first)
 - `core.js` constants, helpers, `ELEM` colours, `Settings`, `Sprites` (pose sprites)
 - `input.js` keyboard + gamepad → `P1In`, `P2In`, `AnyIn` (merged, used vs CPU), `Menu`
-- `audio.js` synthesized SFX/music (`Sound`), `Announcer` = speechSynthesis
+- `audio.js` synthesized SFX (`Sound.play`); music = CC0 tracks in `sounds/music` (`MUSIC` table: optional intro + seamless loop via WebAudio when served, `<audio>` loop on file://; old synth `SONGS` are only a fallback); `Announcer.play(clip)` = Kenney CC0 voice clips in `sounds/voice` through a reverb bus. No text-to-speech (owner: it sounded dull).
 - `characters.js` `ROSTER`: look (procedural fallback) + s1/s2/su move specs (type, style, art, power)
 - `draw.js` procedural chibi + `drawSprite`/`drawCharArt`/`drawPortrait`
 - `effects.js` particles, sparks, comic text, `arc` swooshes, `art` particles (`FX`)
@@ -70,8 +70,11 @@ Browser fighting game (plain JS + Canvas, no build step, no dependencies). Play 
 - Swords: check the handle continues the blade in ONE straight line; the model often bends it at the hand (reads as broken). `tools/straighten.py` / `tools/unhand.py` are the hand-edit helpers.
 - Settings: `settings.json` in the repo root via devserver `/settings` (gitignored, auto-created on first run if missing); localStorage `rumble_arena_settings` is the fallback for `file://`. `ver: 2` forced autoFull off once.
 - Title screen layout: heroes left, villains right (owner rule), all faces visible, centre gap for title + menu.
+- Music pipeline: downloads in `tools/out/music_src` (local only) -> `python tools/make_music.py` (ffmpeg, loudnorm -15 LUFS, OGG). Credits in CREDITS.md; only use CC0.
+- Imu kit = canon First Twenty Weapons: s1 Stigma (Omen orb marks, `StigmaStrike` spear drops; the mark must not knock down or the spear can't hit a downed target), s2 Nemesis (beam art), super Honebami Toshiro (Omen serpents), Lv3 adds Mother Flame. Boss AI `BOSS_AI` in ai.js (blocks/reacts far more). Imu is a silhouette on the ladder until battle 8. Black-flame FX art is `cut` from white (additive on black would erase black flames).
+- Play.bat runs `tools/play.ps1`: finds pyw/pythonw/py/python (skips the MS Store stub), waits for the server, falls back to index.html.
 - Review sheets: `sheet.py`, `base_sheet.py`, `gallery.py`, `gallery_stages.py` → tools/out.
 
 ## Testing (`node tools/tests/<file>.js` from the repo root; headless vm + fake canvas)
-- sim_cpu (CPU vs CPU all 25), sim_moves (every special/super, 101), sim_mash (combo length), sim_hit (connect + super damage), sim_jump, sim_select (no duplicate picks), sim_arcade (ladder, boss intro, ending, lose menu, Imu moves).
+- sim_cpu (CPU vs CPU all 25), sim_moves (every special/super, 101), sim_mash (combo length), sim_hit (connect + super damage), sim_jump, sim_select (no duplicate picks), sim_arcade (ladder, boss intro, ending, lose menu, Imu moves), sim_boss (Imu move damage, boss block rate).
 - Range audit (slow-ish, ~2 min): see `audit_range_dump.js` + `tools/audit_range.py` above. sim_range*.js are legacy.

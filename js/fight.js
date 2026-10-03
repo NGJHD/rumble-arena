@@ -8,12 +8,12 @@ class FightScene {
     this.mode = opts.mode;
     this.stage = opts.stage;
     const in1 = this.mode === 'vs' ? P1In : AnyIn;
-    const in2 = this.mode === 'vs' ? P2In : new CpuInput(this.mode === 'training' ? -1 : opts.level);
+    const in2 = this.mode === 'vs' ? P2In : new CpuInput(this.mode === 'training' ? -1 : opts.level, opts.boss);
     this.f1 = new Fighter(opts.p1, 0, in1);
     this.f2 = new Fighter(opts.p2, 1, in2);
     this.f1.opp = this.f2; this.f2.opp = this.f1;
-    if (this.mode === 'cpu') this.f2.dmgMult = AI_LEVELS[opts.level].dmg;
-    if (opts.boss) { this.f2.dmgMult *= 1.15; this.f2.armor = 0.8; }   // Imu hits harder and takes less damage
+    if (this.mode === 'cpu') this.f2.dmgMult = (opts.boss ? BOSS_AI : AI_LEVELS)[opts.level].dmg;
+    if (opts.boss) this.f2.armor = 0.85;   // Imu takes a little less damage
     if (this.mode === 'training') this.f2.isCpuDummy = true;
     this.round = 1; this.frame = 0;
     this.paused = false; this.pauseSel = 0; this.showMoves = false;
@@ -55,7 +55,6 @@ class FightScene {
   superFlash(f, name, lvl) {
     this.superFreeze = { f, name, lvl, t: 55, max: 55 };
     Sound.play('super');
-    Announcer.say(name + '!', 0.9);
     this.zoomPunch(1.12); this.flashT = 6;
     FX.ring(f.x, f.y - f.height / 2, ec(f.ch.elem, 1), 10, 260, 25, 10);
     FX.burst(f.x, f.y - f.height / 2, f.ch.elem, 40, 12, 9, 35);
@@ -120,7 +119,7 @@ class FightScene {
     if (str >= 3) { Sound.elem(h.elem); this.zoomPunch(1.06 + str * 0.015); this.speedT = Math.max(this.speedT, 10); }
     if (h.finisher || (def.comboTaken >= 10 && (h.knockdown || h.slam))) { this.slowmo = Math.max(this.slowmo, 30); this.flashT = 4; this.zoomPunch(1.2); }
     const side = att === this.f1 ? 0 : 1;
-    for (const [n, word] of PRAISE) if (def.comboTaken === n) { this.praise[side] = { word, t: 70 }; Sound.play('pop'); }
+    for (const [n, word] of PRAISE) if (def.comboTaken === n) { this.praise[side] = { word, t: 70 }; Sound.play('pop'); if (n === 12) Announcer.play('combo'); }
     return 'hit';
   }
   onKO(att, def) {
@@ -131,7 +130,7 @@ class FightScene {
     def.knockOnLand = true; def.state = 'hit'; def.hitstun = 999;
     if (!def.airborne) def.vy = -13;
     def.vx = (def.x > att.x ? 1 : -1) * 9;
-    Sound.play('ko'); Announcer.say('K.O.!', 0.6);
+    Sound.play('ko');
     FX.hitSpark(def.x, def.y - def.height * 0.6, att.ch.elem, 4, att.facing);
   }
 
@@ -279,13 +278,12 @@ class FightScene {
       case 'bossIntro':
         // Imu speaks before the final battle
         if (t === 1) { this.darkT = 170; Sound.play('super'); this.shake(10); }
-        if (t === 20) Announcer.say('Ants can never stop me!', 0.75);
         if (t % 12 === 0) FX.bolt(this.f2.x + rand(-140, 140), this.f2.y - rand(150, 330), this.f2.x + rand(-60, 60), this.f2.y - rand(40, 160), choice(['#111111', '#d50000']), 8, 4);
         if (t >= 170 || (t > 40 && Menu.ok())) { this.phase = 'intro'; this.phaseT = 0; this.darkT = 0; }
         break;
       case 'intro':
-        if (t === 1) { this.banner = { text: 'ROUND ' + this.round, t: 70, col: '#ffffff' }; Announcer.say('Round ' + this.round); Sound.play('round'); }
-        if (t === 75) { this.banner = { text: 'FIGHT!', t: 40, col: '#ffeb3b' }; Announcer.say('Fight!'); this.zoomPunch(1.1); this.shake(8); }
+        if (t === 1) { this.banner = { text: 'ROUND ' + this.round, t: 70, col: '#ffffff' }; const need = Settings.data.roundsToWin; Announcer.play(this.round > 1 && this.f1.wins === need - 1 && this.f2.wins === need - 1 ? 'final_round' : 'round_' + Math.min(3, this.round)); }
+        if (t === 75) { this.banner = { text: 'FIGHT!', t: 40, col: '#ffeb3b' }; Announcer.play('fight'); this.zoomPunch(1.1); this.shake(8); }
         if (t >= 90) { this.phase = 'fight'; this.phaseT = 0; }
         break;
       case 'fight':
@@ -294,7 +292,7 @@ class FightScene {
           if (--this.timer <= 0) {
             this.timer = 0; this.phase = 'timeup'; this.phaseT = 0;
             this.winner = this.f1.hp > this.f2.hp ? this.f1 : this.f2.hp > this.f1.hp ? this.f2 : null;
-            this.banner = { text: 'TIME!', t: 80, col: '#ff9800' }; Announcer.say('Time!');
+            this.banner = { text: 'TIME!', t: 80, col: '#ff9800' }; Announcer.play('time');
           }
         }
         break;
@@ -306,8 +304,11 @@ class FightScene {
           if (this.winner) {
             this.winner.wins++; this.winner.setState('win'); this.winner.atk = null;
             this.banner = { text: (this.winner === this.f1 ? (this.mode === 'cpu' ? 'YOU' : 'P1') : (this.mode === 'cpu' ? 'CPU' : 'P2')) + ' WIN' + (this.winner === this.f1 && this.mode === 'cpu' ? '!' : 'S!'), t: 140, col: '#ffeb3b' };
-            Announcer.say(this.winner.ch.full + ' wins!');
-          } else { this.banner = { text: 'DRAW!', t: 140, col: '#ffffff' }; Announcer.say('Draw!'); }
+            const flawless = this.winner.hp >= MAX_HP;
+            if (this.mode === 'vs') { Announcer.play(this.winner === this.f1 ? 'player_1' : 'player_2'); Announcer.play(flawless ? 'flawless' : 'winner', 0.9); }
+            else if (this.winner === this.f1) Announcer.play(flawless ? 'flawless' : 'you_win');
+            else Announcer.play('you_lose');
+          } else { this.banner = { text: 'DRAW!', t: 140, col: '#ffffff' }; Announcer.play('tie'); }
         }
         break;
       }

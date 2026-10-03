@@ -27,7 +27,7 @@ const Arcade = {
   },
   // computer gets a bit tougher for the second half; the boss fights one level above your choice
   level(run, i) {
-    if (run.ladder[i].boss) return Math.min(2, run.difficulty + 1);
+    if (run.ladder[i].boss) return run.difficulty;   // index into BOSS_AI
     return clamp(run.difficulty + (i >= 4 ? 1 : 0), 0, 2);
   },
   fightOpts(run) {
@@ -63,7 +63,10 @@ class ArcadeLadderScene {
       const x = x0 + i * (sw + gap), y = 560, cur = i === run.i;
       ctx.fillStyle = l.boss ? '#3a0010' : i < run.i ? '#263238' : '#37474f'; ctx.fillRect(x, y, sw, 110);
       ctx.save(); ctx.beginPath(); ctx.rect(x, y, sw, 110); ctx.clip();
-      if (i <= run.i || l.boss) drawPortrait(ctx, l.ch, x + sw / 2, y + 58, 38, i < run.i ? 'ko' : 'normal', this.t);
+      if (l.boss && i > run.i) {   // the final boss stays a mystery: black silhouette with glowing eyes
+        ctx.save(); ctx.filter = 'brightness(0)'; drawPortrait(ctx, l.ch, x + sw / 2, y + 58, 38, 'normal', this.t); ctx.restore();
+        drawText(ctx, '?', x + sw / 2, y + 50, 44, '#ff1744', '#1a1a1a', 'center', 6);
+      } else if (i <= run.i) drawPortrait(ctx, l.ch, x + sw / 2, y + 58, 38, i < run.i ? 'ko' : 'normal', this.t);
       else drawText(ctx, '?', x + sw / 2, y + 55, 70, '#90a4ae', '#1a1a1a', 'center', 8);
       ctx.restore();
       if (i < run.i) { ctx.strokeStyle = '#ff1744'; ctx.lineWidth = 8; ctx.beginPath(); ctx.moveTo(x + 14, y + 14); ctx.lineTo(x + sw - 14, y + 96); ctx.moveTo(x + sw - 14, y + 14); ctx.lineTo(x + 14, y + 96); ctx.stroke(); }
@@ -84,7 +87,7 @@ class ArcadeLadderScene {
 
 // ---------------------------------------------------------------- lost a battle
 class ArcadeLoseScene {
-  constructor(run) { this.run = run; this.t = 0; this.sel = 0; this.items = ['REMATCH', 'MAIN MENU']; Sound.playMusic('results'); }
+  constructor(run) { this.run = run; this.t = 0; this.sel = 0; this.items = ['REMATCH', 'MAIN MENU']; Sound.playMusic('results'); Announcer.play('game_over', 0.4); }
   update() {
     this.t++;
     if (this.t < 40) return;
@@ -113,7 +116,7 @@ class EndingScene {
   constructor(run) {
     this.run = run; this.t = 0;
     Sound.playMusic('results');
-    Announcer.say(run.p1.full + ' defeated Imu! ' + run.p1.quote);
+    Announcer.play('congratulations', 0.6);
   }
   update() {
     this.t++;

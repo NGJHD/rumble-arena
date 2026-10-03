@@ -43,8 +43,8 @@ class TitleScene {
       Sound.play('confirm');
       MenuMem.title = this.sel;
       const it = this.items[this.sel];
-      if (it === 'ARCADE') Game.goto(new DifficultyScene());
-      if (it === 'VERSUS') Game.goto(new SelectScene('vs'));
+      if (it === 'ARCADE') { Announcer.play('arcade_mode'); Game.goto(new DifficultyScene()); }
+      if (it === 'VERSUS') { Announcer.play('battle_mode'); Game.goto(new SelectScene('vs')); }
       if (it === 'TRAINING') Game.goto(new SelectScene('training'));
       if (it === 'OPTIONS') Game.goto(new OptionsScene());
     }
@@ -90,6 +90,7 @@ class SelectScene {
     this.n = ROSTER.length + 1; // last = random
     this.cur = [0, 1]; this.locked = [false, false]; this.pick = [null, null];
     this.solo = mode !== 'vs';
+    Announcer.play('choose', mode === 'vs' ? 1.1 : 0.2);
     this.arcade = mode === 'arcade';   // arcade: only you pick; opponents and stages come from the ladder
     Sound.playMusic('menu');
   }
@@ -143,7 +144,7 @@ class SelectScene {
             this.pick[p] = want;
             this.freeCursor(1 - p);
             Sound.play('confirm');
-            Announcer.say(want.full, 0.8);
+            Announcer.play('ready');
           }
         } else if (back) {
           if (this.solo && p === 1) { this.locked[0] = false; Sound.play('back'); }
@@ -251,7 +252,6 @@ class ResultsScene {
     this.items = ['REMATCH', 'CHARACTER SELECT', 'MAIN MENU'];
     Sound.playMusic('results');
     const who = champ === fight.f1 ? (fight.mode === 'cpu' ? 'You win!' : 'Player 1 wins!') : (fight.mode === 'cpu' ? 'The computer wins!' : 'Player 2 wins!');
-    Announcer.say(who + ' ' + champ.ch.quote);
   }
   update() {
     this.t++;

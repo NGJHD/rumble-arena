@@ -21,6 +21,7 @@ const Sound = {
     if (!this.ctx) return;
     this.sfxGain.gain.value = Settings.data.sfx;
     this.musicGain.gain.value = Settings.data.music * 0.5;
+    if (this.trackEl) this.trackEl.volume = Math.min(1, Settings.data.music * ((MUSIC[this.musicId] || {}).vol || 1));
   },
   tone(freq, dur, type, vol, slideTo, delay, dest) {
     if (!this.ctx) return;
@@ -89,14 +90,36 @@ const Sound = {
   seq: null,
   playMusic(id) {
     if (!this.ctx) { this.pendingSong = id; return; }
-    if (this.seq && this.seq.id === id) return;
+    if (this.musicId === id) return;
     this.stopMusic();
+    this.musicId = id;
+    if (MUSIC[id]) { this._playTrack(id, MUSIC[id]); return; }
     const song = SONGS[id];
     if (!song) return;
     this.seq = { id, song, step: 0, next: this.ctx.currentTime + 0.1 };
     this.seq.timer = setInterval(() => this._sched(), 25);
   },
-  stopMusic() { if (this.seq) { clearInterval(this.seq.timer); this.seq = null; } },
+  stopMusic() {
+    if (this.seq) { clearInterval(this.seq.timer); this.seq = null; }
+    for (const n of this.trackNodes || []) { try { n.stop(); } catch (e) { /* not started */ } }
+    if (this.trackEl) { this.trackEl.pause(); this.trackEl = null; }
+    this.trackNodes = []; this.musicId = null;
+  },
+  // Served over http (Play.bat): WebAudio buffers, intro then a seamless loop. Opened as file://: a looping <audio> element.
+  _playTrack(id, t) {
+    const vol = t.vol || 1;
+    if (!SERVED) {
+      const el = new Audio('sounds/music/' + t.loop); el.loop = true; el.volume = Math.min(1, Settings.data.music * vol);
+      el.play().catch(() => {}); this.trackEl = el; return;
+    }
+    Promise.all([t.intro ? loadBuf('sounds/music/' + t.intro) : null, loadBuf('sounds/music/' + t.loop)]).then(([ib, lb]) => {
+      if (this.musicId !== id || !lb) return;
+      const g = this.ctx.createGain(); g.gain.value = vol; g.connect(this.musicGain);
+      let at = this.ctx.currentTime + 0.05;
+      if (ib) { const s = this.ctx.createBufferSource(); s.buffer = ib; s.connect(g); s.start(at); at += ib.duration; this.trackNodes.push(s); }
+      const l = this.ctx.createBufferSource(); l.buffer = lb; l.loop = true; l.connect(g); l.start(at); this.trackNodes.push(l);
+    });
+  },
   _sched() {
     const q = this.seq; if (!q || !this.ctx) return;
     const spb = 60 / q.song.bpm / 4;
@@ -155,15 +178,53 @@ const SONGS = {
   results: { bpm: 128, prog: [[48, 0], [55, 0], [57, 1], [53, 0]], kick: 'x.......x.......', snare: '....x.......x...', hat: 'x.x.x.x.x.x.x.x.', bass: 'x...x...x...x...', lead: '0.2.4.2.0.2.4.2.' },
 };
 
-// Announcer voice via the browser's built-in speech synthesis.
+// Recorded music (CC0, see CREDITS.md). loop = seamless loop file, intro = played once before it. vol = level trim.
+const MUSIC = {
+  menu: { loop: 'menu.ogg' },
+  sunny: { intro: 'sunny_intro.ogg', loop: 'sunny.ogg' },
+  marineford: { intro: 'marineford_intro.ogg', loop: 'marineford.ogg' },
+  wano: { loop: 'wano.ogg' },
+  alabasta: { intro: 'alabasta_intro.ogg', loop: 'alabasta.ogg' },
+  enies: { loop: 'enies.ogg' },
+  skyisland: { loop: 'skyisland.ogg' },
+  thriller: { intro: 'thriller_intro.ogg', loop: 'thriller.ogg' },
+  elbaph: { loop: 'elbaph.ogg' },
+  boss: { loop: 'boss.ogg' },
+  results: { loop: 'results.ogg' },
+};
+const SERVED = typeof location !== 'undefined' && location.protocol.startsWith('http');
+const BUFS = {};
+function loadBuf(url) {
+  if (!BUFS[url]) BUFS[url] = fetch(url).then(r => r.arrayBuffer()).then(a => Sound.ctx.decodeAudioData(a)).catch(() => null);
+  return BUFS[url];
+}
+
+// Announcer: recorded arcade-announcer clips (sounds/voice, CC0 Kenney voiceover pack) in a big echoing arena.
 const Announcer = {
-  say(text, pitch) {
-    if (!Settings.data.announcer || !window.speechSynthesis) return;
-    try {
-      speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
-      u.rate = 1.05; u.pitch = pitch || 0.7; u.volume = Math.min(1, Settings.data.sfx + 0.2);
-      speechSynthesis.speak(u);
-    } catch (e) { /* speech unavailable */ }
+  bus: null,
+  _bus() {
+    const c = Sound.ctx;
+    if (this.bus || !c) return this.bus;
+    const dry = c.createGain(), wet = c.createGain(), verb = c.createConvolver(), out = c.createGain();
+    // synthetic arena impulse: 1.8 s of decaying noise
+    const len = Math.floor(c.sampleRate * 1.8), ir = c.createBuffer(2, len, c.sampleRate);
+    for (let ch = 0; ch < 2; ch++) { const d = ir.getChannelData(ch); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3); }
+    verb.buffer = ir; dry.gain.value = 1; wet.gain.value = 0.35; out.gain.value = 1.6;
+    dry.connect(out); wet.connect(verb); verb.connect(out); out.connect(Sound.sfxGain);
+    this.bus = { dry, wet };
+    return this.bus;
   },
+  // play(clip[, delaySeconds]). Clips: round_1..3 final_round fight time tie you_win you_lose winner player_1 player_2
+  // flawless combo prepare choose arcade_mode battle_mode game_over ready congratulations power_up go
+  play(clip, delay) {
+    if (!Settings.data.announcer || !Sound.ctx) return;
+    const url = 'sounds/voice/' + clip + '.ogg';
+    if (!SERVED) { const el = new Audio(url); el.volume = Math.min(1, Settings.data.sfx + 0.2); setTimeout(() => el.play().catch(() => {}), (delay || 0) * 1000); return; }
+    loadBuf(url).then(b => {
+      if (!b) return;
+      const bus = this._bus(), s = Sound.ctx.createBufferSource(); s.buffer = b;
+      s.connect(bus.dry); s.connect(bus.wet); s.start(Sound.ctx.currentTime + (delay || 0));
+    });
+  },
+  say() { /* text-to-speech removed: it sounded flat. Kept so old calls stay harmless. */ },
 };
