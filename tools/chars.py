@@ -74,7 +74,7 @@ POSE_OVERRIDES = {
     'imu': {   # canon: glaive halberdier, fast kicks, Omen black flames, Abyss circles, Supreme King Haki black lightning
         'idle': 'standing tall and menacing, holding his ONE long black glaive upright beside him, the curved zigzag blade at the top, eye-covered black wings spread behind him',
         'windup': 'raising his ONE long black glaive high above his head with both hands, about to cleave downward, wings spread',
-        'attack': 'cleaving his ONE long black glaive in a wide forward slash to the right at full extension: the WHOLE glaive is visible from the round cap to the complete unbroken curved zigzag blade at the front, wings spread; the whole figure and weapon fully inside the frame with a wide empty margin on every side',
+        'attack': 'seen from the side facing right, cleaving his ONE long black glaive in a downward forward slash: the glaive is held diagonally in front of him with the big curved zigzag blade (the same blade as in the reference) at the lower right in front of his feet, the round cap at the upper left behind his shoulder; the WHOLE glaive from cap to blade tip, his wings and his whole body are fully inside the frame with a wide empty margin on every side, the blade tip far from the image edge',
         'kick': 'doing a lightning fast high kick to the right, front leg fully extended, holding the glaive behind him in one hand',
         'upper': 'leaping rising slash, his ONE long black glaive swung straight up above his head, both feet off the ground, wings raised',
         'special': 'thrusting his open right hand forward to the right and hurling a big black fireball of Omen flame with red eyes in it, glaive held behind him',
