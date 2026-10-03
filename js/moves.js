@@ -172,7 +172,7 @@ function buildSpecialBase(spec, ch) {
       return Object.assign(base, {
         startup: 40, active: 1, recovery: 12, pose: 'charge', spritePose: 'super', gravity: false, invuln: [0, 53], cd: spec.dur + 360,
         onFrame(f, fr, g) {
-          if (fr === 1) { Sound.play('super'); Announcer.play('power_up'); g.zoomPunch(1.15); g.darkT = 40; }
+          if (fr === 1) { Sound.play('super'); g.zoomPunch(1.15); g.darkT = 40; }
           if (fr < 40 && fr % 3 === 0) FX.smoke(f.x + rand(-40, 40), f.y - f.height * rand(0.2, 0.9), 3, 'rgba(255,255,255,0.85)');
           if (fr === 40) {
             f.form = spec.form; f.formT = spec.dur;

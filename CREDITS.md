@@ -19,7 +19,7 @@ All music and the Kenney voice clips are **CC0 (public domain)**; credit is not 
 
 ## Announcer (`sounds/voice/`)
 - ready, fight, ko, time, tie, perfect, get_ready, you_win, you_lose, player_1_wins, player_2_wins, game_over: recordings supplied by the project owner.
-- round_2, round_3, battle_mode, congratulations, power_up: Voiceover Pack: Fighter / Voiceover Pack by [Kenney](https://kenney.nl) (CC0), sped up 2x and raised a semitone.
+- round_2, round_3, congratulations: Voiceover Pack: Fighter / Voiceover Pack by [Kenney](https://kenney.nl) (CC0), sped up 2x and raised a semitone.
 
 ## Characters
 One Piece and its characters © Eiichiro Oda / Shueisha / Toei Animation. Unofficial fan project.

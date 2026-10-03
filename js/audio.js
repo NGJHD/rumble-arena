@@ -215,7 +215,7 @@ const Announcer = {
     return this.bus;
   },
   // play(clip[, delaySeconds]). Clips: ready (round 1 + final round) round_2 round_3 fight ko time tie you_win you_lose
-  // player_1_wins player_2_wins perfect get_ready battle_mode game_over congratulations power_up
+  // player_1_wins player_2_wins perfect get_ready game_over congratulations
   play(clip, delay) {
     if (!Settings.data.announcer || !Sound.ctx) return;
     const url = 'sounds/voice/' + clip + '.ogg';

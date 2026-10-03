@@ -44,7 +44,7 @@ class TitleScene {
       MenuMem.title = this.sel;
       const it = this.items[this.sel];
       if (it === 'ARCADE') Game.goto(new DifficultyScene());
-      if (it === 'VERSUS') { Announcer.play('battle_mode'); Game.goto(new SelectScene('vs')); }
+      if (it === 'VERSUS') Game.goto(new SelectScene('vs'));
       if (it === 'TRAINING') Game.goto(new SelectScene('training'));
       if (it === 'OPTIONS') Game.goto(new OptionsScene());
     }
