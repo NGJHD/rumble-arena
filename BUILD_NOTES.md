@@ -1,6 +1,6 @@
 # Build Notes — Rumble Arena
 
-Browser fighting game (plain JS + Canvas, no build step, no dependencies). Open `index.html` to play.
+Browser fighting game (plain JS + Canvas, no build step, no dependencies). Play via `Play.bat` (starts `tools/devserver.py`, port 8765) or open `index.html`.
 
 ## Files (load order matters — classic `<script>` tags, shared globals; ES modules break on `file://`)
 - `sprites/manifest.js`, `sprites/fx_manifest.js` generated sprite/effect lists (load first)
@@ -17,7 +17,7 @@ Browser fighting game (plain JS + Canvas, no build step, no dependencies). Open 
 - `kits.js` per-character normal kits (`KITS`, `applyKit`, `strikeFX`) — every fighter's L/M/H/air moves differ
 - `specials.js` per-character special mechanics (`SPECIAL_STYLES`: through, spin, drill, erupt, vortexpull, shima, pull…)
 - `fighter.js` state machine, chaining, physics, sprite-mode drawing, forms (Gear 5 / Monster Point), freeze/stone status
-- `ai.js`, `fight.js` (hit resolution, camera, HUD incl. special cooldown icons), `menus.js`, `main.js`
+- `ai.js`, `fight.js` (hit resolution, camera, HUD incl. special cooldown icons, boss intro), `menus.js` (title/select/options/controls; `MenuMem` remembers cursor), `arcade.js` (ladder, lose screen, ending), `main.js`
 
 ## Design rules (from the owner)
 - Moves must be canon One Piece techniques for that character; never invent names. No generic/recycled moves —
@@ -34,12 +34,14 @@ Browser fighting game (plain JS + Canvas, no build step, no dependencies). Open 
 
 ## Gotchas
 - Browsers pause `requestAnimationFrame` in background tabs; in tests call `step()` / scene.update manually.
-- The Chrome automation extension can't open `file://`. Serve with `python -m http.server 8765`.
+- The Chrome automation extension can't open `file://`. Serve with `python tools/devserver.py` (no-cache; also GET/POST `/settings`).
 - Painted stages: scenery scaled so its ground starts at y=600; the floor is the painting's own ground strip, mirror-tiled at parallax 1 (`makeGroundTile`). Tune `GROUND_FRAC` per stage.
 - Gamepads: standard mapping l/m/h = X/Y/RB, s1/s2/su = A/B/RT; arcade encoders → Controls → set up buttons. Axis-9 hats decoded.
 
 ## Art pipeline (tools/, ComfyUI at C:/ai/ComfyUI port 8188, Flux2 Klein 9B GGUF + qwen_3_8b, 4 steps cfg 1)
-- `chars.py`: prompts (CHARS), user reference map (USER_REFS, user's refs in Desktop/Scratchpad/Rumble Arena), STAGES, FX_ASSETS, FX_META.
+- `chars.py`: prompts (CHARS), user reference map (USER_REFS; refs live outside the repo in `~/Desktop/Scratchpad/Rumble Arena` or `$RUMBLE_REFS`), STAGES, FX_ASSETS, FX_META.
+- `tools/out/` (raw renders incl. hand-edited `out/poses`, picks, candidates) is gitignored and local only. `cut` reads `out/poses`; without it you can't re-cut sprites, only use the committed ones.
+- Run the pipeline with ComfyUI's venv python (`C:/ai/ComfyUI/venv/Scripts/python.exe`), ComfyUI started from `C:/ai/ComfyUI/start-5060ti.bat`.
 - `gen_sprites.py refbase` redraws a user reference (NOSTYLE=1 avoids the Luffy style anchor leaking hats/proportions), 4 variants → user picks → `tools/out/pick/<id>.png`.
 - `gen_sprites.py poses` → 11 poses via ReferenceLatent. `BG=green` renders on green screen for white/outline-less designs (Gear 5, feathers); `SEED=n` re-rolls; `LIMBS` adds anatomy notes (Shanks one arm, Crocodile hook).
 - `gen_sprites.py cut` → sprites/<id>/<pose>.png + manifest (srcH scale, ax feet, head crop, fist = striking point for attack/special/kick/upper/super). Auto-detects green-screen renders.
@@ -59,15 +61,17 @@ Browser fighting game (plain JS + Canvas, no build step, no dependencies). Open 
 - Weapons drift between poses. The pick defines the canon look (Law: purple diamond hilt, no red; Brook: straight thin silver blade, purple grip). Check every pose of a weapon user side by side at full size.
 - The model won't draw a blade pointing down after a slash; ask for 'tip almost touching the floor in front of his feet' and verify.
 - Hits follow the DRAWN frame: `Fighter.hitRects()` = the pose's strike shape (manifest `strike` bands: thin blades/limbs reaching forward + the strike-point disc) placed through the frame's real transform; `hurtRects()` = the body silhouette (`prof` bands, thin weapons opened away). `fight.collide()` uses both. Both come from `cut`.
-- `tools/pose_fix.json` per pose (or `<id>/*`): `scale` (model drew the pose smaller than idle: <1 enlarges), `excl` rects (noses, hats, antlers, hair never count as the strike), `add` rects (thick weapons like the bisento), `fist` (manual strike point), `band`. Check with `tools/out/strikeview.py` and `scaleview.py` sheets after every cut.
+- `tools/pose_fix.json` per pose (or `<id>/*`): `scale` (model drew the pose smaller than idle: <1 enlarges), `excl` rects (noses, hats, antlers, hair never count as the strike), `add` rects (thick weapons like the bisento), `fist` (manual strike point), `band`. Check with `tools/strikeview.py <ids> <out.jpg>` and `tools/scaleview.py <ids> <out.jpg>` (run from tools/) after every cut. `tools/ovprev.py` previews overlays; `tools/audit_show.py` visualises one audit frame.
 - Range audit: `node tools/tests/audit_range_dump.js [id]` records every draw per frame, `python tools/audit_range.py` rasterises the real pixels and reports MISS (art touches, no hit) / PHANTOM. The old sim_range*.js use a 30% body-width guess and are superseded.
 - Move names shown on screen are English (owner rule). Use double quotes for names with apostrophes ("Lion's Song") or the game won't load; run `node --check js/*.js` after renames.
-- Arcade (js/arcade.js): 7 random foes + Imu (BOSSES in characters.js, not selectable) on BOSS_STAGE `stages/imu.jpg`. Endings: `sprites/ending/<id>.jpg` from `tools/gen_extra.py victory` (realistic anime, text-to-image) -> `pick <id> <n>`; picker page tools/out/victory/index.html. Gear 5 win uses luffy_g5.
+- Arcade (js/arcade.js): 7 random foes + Imu (BOSSES in characters.js, not selectable; armor 0.8, dmg x1.15) on BOSS_STAGE `stages/imu.jpg`. Endings `sprites/ending/<id>.jpg`: `gen_extra.py victory_ref [ids]` renders from the owner's realistic refs (`<refs>/victory`, image 1 = hero, image 2 = Imu) -> out/victory3; `NOTES`/`UNARMED` in gen_extra.py hold per-hero fixes (Luffy chest X, Usopp nose, hook hand, bisento...); `vedit` = img2img fix; `VDIR=victory3 gen_extra.py pick <id> <n>` installs. Text-only renders got faces/weapons wrong: always use refs. Gear 5 win uses luffy_g5.
 - Title art: `tools/title_bg.py` composites the cut sprites -> sprites/ui/title_bg.jpg (re-run after sprite changes).
 - Pose size check: compare a stable feature (hat crown, afro) per pose, not face area/template match (turned/shaded faces fool both). Fix with pose_fix `scale`.
 - Swords: check the handle continues the blade in ONE straight line; the model often bends it at the hand (reads as broken). `tools/straighten.py` / `tools/unhand.py` are the hand-edit helpers.
-- Settings live in browser localStorage (key rumble_arena_settings, ver 2).
+- Settings: `settings.json` in the repo root via devserver `/settings` (gitignored, auto-created on first run if missing); localStorage `rumble_arena_settings` is the fallback for `file://`. `ver: 2` forced autoFull off once.
+- Title screen layout: heroes left, villains right (owner rule), all faces visible, centre gap for title + menu.
 - Review sheets: `sheet.py`, `base_sheet.py`, `gallery.py`, `gallery_stages.py` → tools/out.
 
 ## Testing (`node tools/tests/<file>.js` from the repo root; headless vm + fake canvas)
-- CPU-vs-CPU all 25; force every special/super (101 moves); mash-combo per fighter; special/super connect + damage table.
+- sim_cpu (CPU vs CPU all 25), sim_moves (every special/super, 101), sim_mash (combo length), sim_hit (connect + super damage), sim_jump, sim_select (no duplicate picks), sim_arcade (ladder, boss intro, ending, lose menu, Imu moves).
+- Range audit (slow-ish, ~2 min): see `audit_range_dump.js` + `tools/audit_range.py` above. sim_range*.js are legacy.

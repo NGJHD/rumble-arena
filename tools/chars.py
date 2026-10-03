@@ -185,7 +185,9 @@ POSE_OVERRIDES = {
 }
 
 # Reference images supplied by the user (design source) for `gen_sprites.py refbase`
-USER_REF_DIR = 'C:/Users/ngjhd/Desktop/Scratchpad/Rumble Arena'
+import os
+# the owner's reference images (not in the repo); override with RUMBLE_REFS
+USER_REF_DIR = os.environ.get('RUMBLE_REFS', os.path.join(os.path.expanduser('~'), 'Desktop', 'Scratchpad', 'Rumble Arena')).replace(os.sep, '/')
 USER_REFS = {
     'imu': 'imu.jpg',
     'luffy_g5': 'gear 5.png',

@@ -8,7 +8,7 @@
 import os, sys, zlib, time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import gen_sprites as G
-from chars import CHARS
+from chars import CHARS, USER_REF_DIR
 
 OUT = G.OUT
 ROOT = G.ROOT
@@ -79,7 +79,7 @@ def victory(ids):
             make(p, 5150 + n * 7919 + zlib.crc32(cid.encode()) % 1000, os.path.join(OUT, 'victory', f'{cid}_{n}.png'), 1280, 720)
 
 
-VREF_DIR = 'C:/Users/ngjhd/Desktop/Scratchpad/Rumble Arena/victory'
+VREF_DIR = USER_REF_DIR + '/victory'   # realistic references for the arcade ending art
 VREF = {'ace': 'ace.jpeg', 'akainu': 'akainu.webp', 'bigmom': 'big mom 2.jpg', 'blackbeard': 'blackbeard.webp', 'hancock': 'boa 2.jpg',
         'brook': 'brook.webp', 'chopper': 'chopper.webp', 'crocodile': 'crocodile.webp', 'doflamingo': 'doflamingo.jpg', 'franky': 'franky.jpg',
         'garp': 'garp.png', 'jinbe': 'jinbe.webp', 'kaido': 'kaido.webp', 'kizaru': 'kizaru 3.jpg', 'aokiji': 'kuzan.webp', 'law': 'law.webp',
