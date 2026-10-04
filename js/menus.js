@@ -62,6 +62,7 @@ class TitleScene {
       if (this.t % 60 < 40) drawText(ctx, 'PRESS ANY BUTTON!', W / 2, 440, 46, '#ffffff', '#1a1a1a', 'center', 9);
     } else drawMenuList(ctx, this.items, this.sel, W / 2, 330, 78, 50);
     drawText(ctx, 'F = Fullscreen', W - 20, H - 20, 18, '#ffffff', '#1a1a1a', 'right', 4);
+    drawText(ctx, 'Made by Darren Ng  ·  v' + GAME_VERSION + '  ·  github.com/NGJHD/rumble-arena', 20, H - 20, 18, '#ffffff', '#1a1a1a', 'left', 4);
   }
 }
 
