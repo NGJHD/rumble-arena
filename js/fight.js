@@ -522,7 +522,7 @@ class FightScene {
     // banner
     if (this.banner) {
       const b = this.banner, age = b.age || 0;
-      const sc = age < 10 ? easeOutBack(age / 10) * 1.0 : 1 + (age - 10) * 0.002;
+      const sc = age < 10 ? easeOutBack(age / 10) : Math.min(1.25, 1 + (age - 10) * 0.002);   // slow grow, capped
       ctx.save(); ctx.translate(W / 2, H / 2 - 40); ctx.scale(sc, sc); ctx.globalAlpha = Math.min(1, b.t / 10);
       drawText(ctx, b.text, 0, 0, b.text.length > 10 ? 96 : 130, b.col, '#1a1a1a', 'center', 16);
       ctx.restore();
