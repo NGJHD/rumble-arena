@@ -326,8 +326,8 @@ class FightScene {
   updatePause() {
     const items = this.pauseItems();
     if (this.showMoves) { if (Menu.ok() || Menu.back()) { this.showMoves = false; Sound.play('back'); } return; }
+    if (this.controls) { this.controls.update(); return; }   // opened from pause → options; Back returns to options
     if (this.showOpts) { this.updatePauseOptions(); return; }
-    if (this.controls) { this.controls.update(); return; }
     if (Menu.up()) { this.pauseSel = (this.pauseSel + items.length - 1) % items.length; Sound.play('select'); }
     if (Menu.down()) { this.pauseSel = (this.pauseSel + 1) % items.length; Sound.play('select'); }
     if (Menu.back() && !Input.sys('Escape')) { this.paused = false; return; }
@@ -338,22 +338,22 @@ class FightScene {
       if (it === 'RESUME') this.paused = false;
       if (it === 'MOVE LIST') this.showMoves = true;
       if (it === 'OPTIONS') { this.showOpts = true; this.optSel = 0; }
-      if (it === 'CONTROLS') this.controls = new ControlsScene(() => { this.controls = null; });
       if (it === 'CHARACTER SELECT') Game.goto(new SelectScene(this.mode, this.opts.level));
-      if (it === 'MAIN MENU') Game.goto(new TitleScene());
+      if (it === 'GO BACK TO MAIN MENU') Game.goto(new TitleScene());
     }
   }
-  pauseItems() { return this.opts.arcade ? ['RESUME', 'MOVE LIST', 'OPTIONS', 'CONTROLS', 'MAIN MENU'] : ['RESUME', 'MOVE LIST', 'OPTIONS', 'CONTROLS', 'CHARACTER SELECT', 'MAIN MENU']; }
+  pauseItems() { return this.opts.arcade ? ['RESUME', 'MOVE LIST', 'OPTIONS', 'GO BACK TO MAIN MENU'] : ['RESUME', 'MOVE LIST', 'OPTIONS', 'CHARACTER SELECT', 'GO BACK TO MAIN MENU']; }
   // in-fight options: the settings that make sense mid-match (volumes, announcer), changed live
   pauseOptRows() {
     const d = Settings.data, bars = v => '▮'.repeat(Math.round(v * 10)) || 'OFF';
-    return [['MUSIC VOLUME', bars(d.music)], ['SOUND VOLUME', bars(d.sfx)], ['ANNOUNCER VOICE', d.announcer ? 'ON' : 'OFF'], ['BACK', '']];
+    return [['MUSIC VOLUME', bars(d.music)], ['SOUND VOLUME', bars(d.sfx)], ['ANNOUNCER VOICE', d.announcer ? 'ON' : 'OFF'], ['CONTROLS', 'SET UP'], ['BACK', '']];
   }
   updatePauseOptions() {
     const n = this.pauseOptRows().length, d = Settings.data;
     if (Menu.up()) { this.optSel = (this.optSel + n - 1) % n; Sound.play('select'); }
     if (Menu.down()) { this.optSel = (this.optSel + 1) % n; Sound.play('select'); }
     if (Menu.back() || Input.sys('Escape') || (Menu.ok() && this.optSel === n - 1)) { this.showOpts = false; Sound.play('back'); return; }
+    if (this.optSel === 3) { if (Menu.ok() || Menu.right()) { Sound.play('confirm'); this.controls = new ControlsScene(() => { this.controls = null; }); } return; }
     const dir = Menu.left() ? -1 : Menu.right() || Menu.ok() ? 1 : 0;
     if (!dir) return;
     if (this.optSel === 0) d.music = clamp(Math.round((d.music + dir * 0.1) * 10) / 10, 0, 1);
@@ -573,7 +573,7 @@ class FightScene {
       this.pauseOptRows().forEach(([k, v], i) => {
         const sel = i === this.optSel, y = 290 + i * 80;
         drawText(ctx, k, v ? 330 : W / 2, y, 42, sel ? '#ffffff' : '#78909c', '#1a1a1a', v ? 'left' : 'center', 7);
-        if (v) drawText(ctx, '◀ ' + v + ' ▶', 900, y, 38, sel ? '#ffeb3b' : '#cfd8dc', '#1a1a1a', 'center', 6);
+        if (v) drawText(ctx, k === 'CONTROLS' ? v + ' ▶' : '◀ ' + v + ' ▶', 900, y, 38, sel ? '#ffeb3b' : '#cfd8dc', '#1a1a1a', 'center', 6);
       });
       drawText(ctx, '◀ ▶ change · Back / Esc = return', W / 2, H - 50, 22, '#90a4ae', '#1a1a1a', 'center', 4);
       return;

@@ -12,7 +12,7 @@ A flashy 1v1 fighting game with 25 chibi One Piece fighters, made for kids. Plai
 - **Arcade** – pick a fighter and difficulty, then win 8 battles in a row. Opponents and stages are chosen for you, and the 8th battle is the final boss **Imu**. His face stays hidden until you reach him. Beat him to see your fighter's ending art. Lost a battle? **Rematch**, or **Change fighter** to continue from the same battle with someone else.
 - **Versus** – two players, each picks a fighter (the same fighter can't be picked twice) and a stage.
 - **Training** – practise on a dummy with full super meter.
-- **Options** – rounds, timer, volumes, announcer, fullscreen, **Controls** (controller setup) and **Update game** (downloads the newest release from GitHub and restarts; needs `Play.bat`). Volumes and announcer can also be changed mid-fight (pause → **Options**), and controllers set up mid-fight (pause → **Controls**).
+- **Options** – rounds, timer, volumes, announcer, fullscreen, **Controls** (controller setup) and **Update game** (downloads the newest release from GitHub and restarts; needs `Play.bat`). Volumes, announcer and controllers can also be changed mid-fight: pause → **Options** (controllers under **Controls**).
 
 ## Controls
 | | Player 1 | Player 2 |
