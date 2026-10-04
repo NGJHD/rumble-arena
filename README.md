@@ -3,7 +3,7 @@
 A flashy 1v1 fighting game with 25 chibi One Piece fighters, made for kids. Plain HTML + JavaScript: no install, no build step.
 
 ## Play
-- **Windows:** double-click **`Play.bat`**. It starts a tiny local server (plain PowerShell, nothing to install) and opens the game in its own window with the music playing. Settings are saved to `settings.json` in this folder.
+- **Windows:** double-click **`Play.bat`**. It starts a tiny local server (Windows' built-in PowerShell, nothing to install) and opens the game in its own window with the music playing. Settings are saved to `settings.json` in this folder.
 - **Mac / Linux:** run `python3 tools/devserver.py`, then open http://localhost:8765/index.html
 - Double-clicking `index.html` also works, but settings then stay inside that browser and the music starts on your first key press.
 - Press **F** for fullscreen. Chrome or Edge recommended.
@@ -12,7 +12,7 @@ A flashy 1v1 fighting game with 25 chibi One Piece fighters, made for kids. Plai
 - **Arcade** – pick a fighter and difficulty, then win 8 battles in a row. Opponents and stages are chosen for you, and the 8th battle is the final boss **Imu**. His face stays hidden until you reach him. Beat him to see your fighter's ending art. Lost a battle? **Rematch**, or **Change fighter** to continue from the same battle with someone else.
 - **Versus** – two players, each picks a fighter (the same fighter can't be picked twice) and a stage.
 - **Training** – practise on a dummy with full super meter.
-- **Options** – rounds, timer, volumes, announcer, fullscreen, **Controls** (controller setup) and **Update game** (downloads the newest release from GitHub and restarts; needs `Play.bat`). Volumes and announcer can also be changed mid-fight: pause → **Options**.
+- **Options** – rounds, timer, volumes, announcer, fullscreen, **Controls** (controller setup) and **Update game** (downloads the newest release from GitHub and restarts; needs `Play.bat`). Volumes and announcer can also be changed mid-fight (pause → **Options**), and controllers set up mid-fight (pause → **Controls**).
 
 ## Controls
 | | Player 1 | Player 2 |
@@ -27,7 +27,7 @@ A flashy 1v1 fighting game with 25 chibi One Piece fighters, made for kids. Plai
 - **Hold back** to block. **Tap forward twice** to dash. **Up in the air** to double jump.
 - The round icons next to the super meter show when the two specials are ready again.
 - **Super** needs 1 bar. With **3 bars** you get the giant LEVEL 3 MAX version.
-- Luffy's Special 2 turns him into **Gear 5** for a few seconds (then it needs a long rest). Chopper's super turns him into **Monster Point**.
+- Luffy's Special 2 turns him into **Gear 5** for a few seconds (then it needs a long rest). The **Gear 5** bar under his name fills up, glows when ready, and drains while Gear 5 lasts. Chopper's super turns him into **Monster Point**.
 
 **Joysticks / gamepads / arcade sticks:** plug in, press a button on it, then **Options → Controls** → choose which player uses which controller → **Set up controller buttons** if the buttons are mixed up.
 

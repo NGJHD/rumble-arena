@@ -76,6 +76,8 @@ Browser fighting game (plain JS + Canvas, no build step, no dependencies). Play 
 - Voice clips: most are the owner's recordings (Desktop/Scratchpad/Rumble Arena/audio), silence-trimmed and loudness-matched to -14.5 LUFS, natural speed. The few Kenney ones left are `atempo` 2x and +1 semitone. Every round starts with "Ready"; vs wins say "Player N wins" (+ "Perfect" on a flawless round).
 - Updater: Options → UPDATE GAME (`js/updater.js`). server.ps1 `/update/check` asks GitHub `releases/latest` (TLS 1.2 forced: PS 5.1 defaults to 1.0), compares with `js/version.js` numerically; `/update/install` re-checks itself, refuses git folders / read-only folders / non-GitHub URLs, then starts `tools/update.ps1` (download → System32 tar.exe → verify version.js == tag → robocopy /E, no /MIR → restart server). Status JSON in %TEMP%/rumble-update-status.json, log in update.log. Test with `RUMBLE_UPDATE_API` pointing at a local mock and a scratch copy claiming an older version.
 - Arcade continue: lose screen → CHANGE FIGHTER opens SelectScene('arcade', diff, run) → `Arcade.changeFighter` keeps the ladder and battle index; a new fighter still ahead on the ladder swaps slots with the old one (no mirror matches).
+- Pause CONTROLS: `ControlsScene(onBack)` drawn as an overlay inside FightScene (`this.controls`); default onBack returns to OptionsScene.
+- Transform charge bar (Gear 5) under the HUD name: `f.cdMax` holds each special's full cooldown; at form end cdMax.s2 is reset to the remaining rest so the bar refills 0→1. Stays full during the power-up animation.
 - Pause menu has OPTIONS (music/sound/announcer, live).
 - Review sheets: `sheet.py`, `base_sheet.py`, `gallery.py`, `gallery_stages.py` → tools/out.
 

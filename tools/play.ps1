@@ -1,4 +1,4 @@
-# Launcher used by Play.bat: start the local game server (tools/server.ps1, plain PowerShell - no Python needed)
+# Launcher used by Play.bat: start the local game server (tools/server.ps1, Windows' built-in PowerShell)
 # if it isn't running, wait until it answers, then open the game.
 $root = Split-Path -Parent $PSScriptRoot
 $url = 'http://localhost:8765/index.html'

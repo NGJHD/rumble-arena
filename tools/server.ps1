@@ -1,4 +1,4 @@
-# Tiny local game server in plain Windows PowerShell (no Python needed). Started hidden by Play.bat via play.ps1.
+# Tiny local game server in Windows' built-in PowerShell. Started hidden by Play.bat via play.ps1.
 #   GET  /<file>     -> files from the game folder (no caching, so updates show up on refresh)
 #   GET  /settings   -> settings.json (404 until the first save)
 #   POST /settings   -> writes settings.json

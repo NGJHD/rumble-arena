@@ -234,7 +234,7 @@ class FightScene {
   // ------------------------------------------------------------ main update
   update() {
     if (this.paused) { this.updatePause(); return; }
-    if (Input.sys('Escape') || P1In.pressed.start || P2In.pressed.start) { this.paused = true; this.pauseSel = 0; this.showMoves = false; this.showOpts = false; Sound.play('select'); return; }
+    if (Input.sys('Escape') || P1In.pressed.start || P2In.pressed.start) { this.paused = true; this.pauseSel = 0; this.showMoves = false; this.showOpts = false; this.controls = null; Sound.play('select'); return; }
     this.frame++;
     if (this.f2.input instanceof CpuInput) this.f2.input.think(this.f2, this.f1, this);
     this.shakeAmt *= 0.86;
@@ -327,6 +327,7 @@ class FightScene {
     const items = this.pauseItems();
     if (this.showMoves) { if (Menu.ok() || Menu.back()) { this.showMoves = false; Sound.play('back'); } return; }
     if (this.showOpts) { this.updatePauseOptions(); return; }
+    if (this.controls) { this.controls.update(); return; }
     if (Menu.up()) { this.pauseSel = (this.pauseSel + items.length - 1) % items.length; Sound.play('select'); }
     if (Menu.down()) { this.pauseSel = (this.pauseSel + 1) % items.length; Sound.play('select'); }
     if (Menu.back() && !Input.sys('Escape')) { this.paused = false; return; }
@@ -337,11 +338,12 @@ class FightScene {
       if (it === 'RESUME') this.paused = false;
       if (it === 'MOVE LIST') this.showMoves = true;
       if (it === 'OPTIONS') { this.showOpts = true; this.optSel = 0; }
+      if (it === 'CONTROLS') this.controls = new ControlsScene(() => { this.controls = null; });
       if (it === 'CHARACTER SELECT') Game.goto(new SelectScene(this.mode, this.opts.level));
       if (it === 'MAIN MENU') Game.goto(new TitleScene());
     }
   }
-  pauseItems() { return this.opts.arcade ? ['RESUME', 'MOVE LIST', 'OPTIONS', 'MAIN MENU'] : ['RESUME', 'MOVE LIST', 'OPTIONS', 'CHARACTER SELECT', 'MAIN MENU']; }
+  pauseItems() { return this.opts.arcade ? ['RESUME', 'MOVE LIST', 'OPTIONS', 'CONTROLS', 'MAIN MENU'] : ['RESUME', 'MOVE LIST', 'OPTIONS', 'CONTROLS', 'CHARACTER SELECT', 'MAIN MENU']; }
   // in-fight options: the settings that make sense mid-match (volumes, announcer), changed live
   pauseOptRows() {
     const d = Settings.data, bars = v => '▮'.repeat(Math.round(v * 10)) || 'OFF';
@@ -479,6 +481,29 @@ class FightScene {
       ctx.fillStyle = lvl > 0 ? ['#40c4ff', '#69f0ae', '#ff5252', '#ff5252'][lvl] : '#455a64'; ctx.beginPath(); ctx.arc(L ? 62 : W - 62, my + 8, 26, 0, TAU); ctx.fill();
       drawText(ctx, String(lvl), L ? 62 : W - 62, my + 10, 38, '#fff', '#1a1a1a', 'center', 5);
       if (lvl >= 1) drawText(ctx, full ? 'MAX! PRESS SUPER!' : 'SUPER READY!', L ? mx + 4 : mx + 296, my - 16, 20, full && t % 20 < 10 ? '#ff5252' : '#ffeb3b', '#1a1a1a', L ? 'left' : 'right', 4);
+      // transformation charge bar under the name (Luffy's Gear 5): fills while recharging, pulses when ready,
+      // drains while the form lasts
+      const tr = f.ch.s2.type === 'transform' ? f.ch.s2 : null;
+      if (tr) {
+        const powering = f.state === 'attack' && f.atk && f.atk.data === f.moves.s2;   // power-up animation: stay full until the form starts
+        const inForm = f.formT > 0, ready = !inForm && (f.cd.s2 <= 0 || powering);
+        const k = inForm ? f.formT / (tr.dur || 1) : ready ? 1 : clamp(1 - f.cd.s2 / (f.cdMax.s2 || 1), 0, 1);
+        const bw = 220, bh = 12, by = 100, bx = L ? 132 : W - 132 - bw;
+        const pulse = 0.5 + 0.5 * Math.sin(t * 0.25);
+        ctx.save();
+        if (ready || inForm) { ctx.shadowColor = inForm ? '#ff5252' : '#ffd740'; ctx.shadowBlur = 8 + 14 * pulse; }
+        ctx.fillStyle = '#1a1a1a'; ctx.fillRect(bx - 3, by - 3, bw + 6, bh + 6);
+        ctx.restore();
+        ctx.fillStyle = '#263238'; ctx.fillRect(bx, by, bw, bh);
+        ctx.fillStyle = inForm ? '#ffffff' : ready ? (t % 16 < 8 ? '#fff176' : '#ffd740') : '#ff9100';
+        const fw = bw * k;
+        ctx.fillRect(L ? bx : bx + bw - fw, by, fw, bh);
+        if (inForm) { ctx.fillStyle = '#ff5252'; ctx.fillRect(L ? bx + fw - 3 : bx + bw - fw, by, 3, bh); }
+        const s = ready ? 1 + 0.18 * pulse : 1;
+        ctx.save(); ctx.translate(L ? bx + bw + 12 : bx - 12, by + bh / 2); ctx.scale(s, s);
+        drawText(ctx, tr.name.toUpperCase(), 0, 0, 20, inForm ? '#ffffff' : ready ? '#ffd740' : '#b0bec5', '#1a1a1a', L ? 'left' : 'right', 4);
+        ctx.restore();
+      }
       // special cooldown icons (G/H for P1, Num1/Num2 for P2)
       ['s1', 's2'].forEach((k, j) => {
         const cx = L ? 440 + j * 46 : W - 440 - j * 46, cy = H - 33, max = f.moves[k].cd || 40, left = f.cd[k];
@@ -542,6 +567,7 @@ class FightScene {
   drawPause(ctx) {
     ctx.fillStyle = 'rgba(0,0,0,0.7)'; ctx.fillRect(0, 0, W, H);
     if (this.showMoves) { drawMoveList(ctx, this.f1.ch, this.f2.ch); return; }
+    if (this.controls) { this.controls.draw(ctx); return; }
     if (this.showOpts) {
       drawText(ctx, 'OPTIONS', W / 2, 160, 80, '#ffeb3b', '#1a1a1a', 'center', 12);
       this.pauseOptRows().forEach(([k, v], i) => {

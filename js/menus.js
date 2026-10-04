@@ -296,7 +296,8 @@ class ResultsScene {
 
 // ---------------------------------------------------------------- controls
 class ControlsScene {
-  constructor() { this.t = 0; this.sel = 0; this.remap = null; }
+  // onBack: where Back goes (Options menu by default; the pause menu passes its own to come back to the fight)
+  constructor(onBack) { this.t = 0; this.sel = 0; this.remap = null; this.onBack = onBack || (() => Game.goto(new OptionsScene())); }
   items() {
     const padName = i => i < 0 ? 'NONE' : 'CONTROLLER ' + (i + 1) + (Input.pad(i) ? ' ✔' : ' (not plugged in)');
     return ['P1 USES: ' + padName(Settings.data.padP1), 'P2 USES: ' + padName(Settings.data.padP2), 'SET UP P1 CONTROLLER BUTTONS', 'SET UP P2 CONTROLLER BUTTONS', 'BACK'];
@@ -308,9 +309,9 @@ class ControlsScene {
     this.sel = navList(this.sel, items.length);
     const cycle = (key, d) => { let v = Settings.data[key] + d; if (v < -1) v = 3; if (v > 3) v = -1; Settings.data[key] = v; Settings.save(); Sound.play('select'); };
     if (this.sel <= 1 && (Menu.left() || Menu.right())) cycle(this.sel ? 'padP2' : 'padP1', Menu.left() ? -1 : 1);
-    if (Menu.back()) { Sound.play('back'); Game.goto(new OptionsScene()); return; }
+    if (Menu.back()) { Sound.play('back'); this.onBack(); return; }
     if (Input.sys('Enter') || Input.sys('Space') || (Menu.ok() && this.sel >= 2)) {
-      if (this.sel === 4) { Sound.play('back'); Game.goto(new OptionsScene()); return; }
+      if (this.sel === 4) { Sound.play('back'); this.onBack(); return; }
       if (this.sel <= 1) { cycle(this.sel ? 'padP2' : 'padP1', 1); return; }
       const padIdx = this.sel === 2 ? Settings.data.padP1 : Settings.data.padP2;
       const pad = Input.pad(padIdx);

@@ -21,7 +21,7 @@ class Fighter {
       x, y: GROUND_Y, vx: 0, vy: 0, facing, hp: MAX_HP, hpRed: MAX_HP, redDelay: 0,
       state: 'idle', t: 0, animT: 0, atk: null, hitstun: 0, blockstun: 0, invuln: 0,
       airJumps: 1, comboTaken: 0, juggle: 0, combo: 0, comboShow: 0, comboDmg: 0,
-      buffer: null, cd: { s1: 0, s2: this.ch.s2.type === 'transform' ? 600 : 0 }, lastTap: { dir: 0, t: 0 }, trail: 0, ghosts: [],
+      buffer: null, cd: { s1: 0, s2: this.ch.s2.type === 'transform' ? 600 : 0 }, cdMax: { s1: 1, s2: this.ch.s2.type === 'transform' ? 600 : 1 }, lastTap: { dir: 0, t: 0 }, trail: 0, ghosts: [],
       knockOnLand: false, groundBounce: false, wallBounce: false, flash: 0, pendingJump: false,
       maxLook: 0, cine: null, hidden: false, landT: 0,
       form: null, formT: 0, giantK: 1, clones: 0, iced: 0, stoned: 0, statusBy: null,
@@ -143,7 +143,7 @@ class Fighter {
     this.clones = 0;
     if (this.formT > 0) {
       if (this.formT % 36 === 0) Sound.play('drum');
-      if (--this.formT === 0) { this.form = null; FX.smoke(this.x, this.y - this.height / 2, 14, 'rgba(255,255,255,0.8)'); Sound.play('back'); }
+      if (--this.formT === 0) { this.cdMax.s2 = Math.max(1, this.cd.s2); this.form = null; FX.smoke(this.x, this.y - this.height / 2, 14, 'rgba(255,255,255,0.8)'); Sound.play('back'); }
     }
     if (this.iced > 0 || this.stoned > 0) { this.updateStatus(g); return; }
     if (this.cine) { this.updateCine(g); return; }
@@ -274,7 +274,7 @@ class Fighter {
     }
     if (d.isSpecial) {
       FX.ring(this.x, this.y - this.height * 0.55, ec(d.elem, 1), 10, 120, 14, 5);
-      this.cd[d === this.moves.s1 ? 's1' : 's2'] = d.cd || 35;
+      const ck = d === this.moves.s1 ? 's1' : 's2'; this.cd[ck] = d.cd || 35; this.cdMax[ck] = this.cd[ck];
       FX.label(this.x, this.y - this.height - 40, d.name.toUpperCase() + '!', ec(d.elem, 1), 30);
       this.meter = Math.min(MAX_METER, this.meter + 40);
     }
