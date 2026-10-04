@@ -245,7 +245,7 @@ class FightScene {
     if (this.tiltT > 0) { this.tiltT--; this.tilt = Math.sin(this.tiltT * 0.12) * 0.07 * Math.min(1, this.tiltT / 20); } else this.tilt = 0;
     if (this.speedT > 0) this.speedT--;
     for (const p of this.praise) if (p && --p.t <= 0) this.praise[this.praise.indexOf(p)] = null;
-    if (this.banner && --this.banner.t <= 0) this.banner = null;
+    if (this.banner) { this.banner.age = (this.banner.age || 0) + 1; if (--this.banner.t <= 0) this.banner = null; }   // animate in update, so pausing freezes it
 
     if (this.superFreeze) {
       const sf = this.superFreeze;
@@ -521,7 +521,7 @@ class FightScene {
     }
     // banner
     if (this.banner) {
-      const b = this.banner, age = (b.age = (b.age || 0) + 1);
+      const b = this.banner, age = b.age || 0;
       const sc = age < 10 ? easeOutBack(age / 10) * 1.0 : 1 + (age - 10) * 0.002;
       ctx.save(); ctx.translate(W / 2, H / 2 - 40); ctx.scale(sc, sc); ctx.globalAlpha = Math.min(1, b.t / 10);
       drawText(ctx, b.text, 0, 0, b.text.length > 10 ? 96 : 130, b.col, '#1a1a1a', 'center', 16);
