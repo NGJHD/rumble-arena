@@ -86,10 +86,12 @@ class DifficultyScene {
 const SEL_COLS = 9, SLOT_W = 118, SLOT_H = 92, SLOT_GAP = 6;
 const SEL_X0 = (W - (SEL_COLS * (SLOT_W + SLOT_GAP) - SLOT_GAP)) / 2, SEL_Y0 = 420;
 class SelectScene {
-  constructor(mode, level) {
+  constructor(mode, level, cont) {
     this.mode = mode; this.level = level || 0; this.t = 0;
+    this.cont = cont || null;   // arcade continue: the run to resume with a new fighter
     this.n = ROSTER.length + 1; // last = random
     this.cur = [0, 1]; this.locked = [false, false]; this.pick = [null, null];
+    if (this.cont) this.cur[0] = Math.max(0, ROSTER.indexOf(this.cont.p1));   // start on the fighter who just lost
     this.solo = mode !== 'vs';
     Announcer.play('get_ready', mode === 'vs' ? 1.1 : 0.2);
     this.arcade = mode === 'arcade';   // arcade: only you pick; opponents and stages come from the ladder
@@ -127,7 +129,7 @@ class SelectScene {
   charAt(i) { return i >= ROSTER.length ? null : ROSTER[i]; }
   update() {
     this.t++;
-    if (this.arcade && this.locked[0]) { Game.goto(new ArcadeLadderScene(Arcade.start(this.pick[0], this.level))); return; }
+    if (this.arcade && this.locked[0]) { Game.goto(new ArcadeLadderScene(this.cont ? Arcade.changeFighter(this.cont, this.pick[0]) : Arcade.start(this.pick[0], this.level))); return; }
     const active = this.solo ? [this.locked[0] ? 1 : 0] : [0, 1];
     for (const p of active) {
       const inp = this.solo ? AnyIn : (p === 0 ? P1In : P2In);
@@ -148,7 +150,7 @@ class SelectScene {
           }
         } else if (back) {
           if (this.solo && p === 1) { this.locked[0] = false; Sound.play('back'); }
-          else if (p === 0) { Sound.play('back'); Game.goto(this.mode === 'cpu' || this.arcade ? new DifficultyScene() : new TitleScene()); return; }
+          else if (p === 0) { Sound.play('back'); Game.goto(this.cont ? new ArcadeLoseScene(this.cont) : this.mode === 'cpu' || this.arcade ? new DifficultyScene() : new TitleScene()); return; }
         }
       } else if (back) { this.locked[p] = false; Sound.play('back'); }
     }
@@ -174,7 +176,10 @@ class SelectScene {
       } else drawText(ctx, '?', x, 260, 160, '#ffffff', '#1a1a1a', 'center', 12);
       drawText(ctx, label + (this.locked[p] ? ' READY!' : ''), p === 0 ? x - 135 : x + 135, 120, 30, col, '#1a1a1a', 'center', 6);
     }
-    if (this.arcade) {
+    if (this.cont) {
+      drawText(ctx, 'CONTINUE', W / 2 + 180, 190, 90, '#69f0ae', '#1a1a1a', 'center', 12);
+      drawText(ctx, 'Pick a fighter for battle ' + (this.cont.i + 1) + ' of ' + ARCADE_LEN, W / 2 + 180, 280, 30, '#ffffff', '#1a1a1a', 'center', 5);
+    } else if (this.arcade) {
       drawText(ctx, 'ARCADE', W / 2 + 180, 190, 90, '#ffeb3b', '#1a1a1a', 'center', 12);
       drawText(ctx, '8 battles. The last one waits at the top of the world...', W / 2 + 180, 280, 26, '#ffffff', '#1a1a1a', 'center', 5);
     } else drawText(ctx, 'VS', W / 2, 240, 110, '#ffffff', '#d50000', 'center', 12);

@@ -25,6 +25,15 @@ const Arcade = {
     endingImg(p1.id);   // preload the ending
     return this.run;
   },
+  // continue after a loss with a different fighter: same ladder, same battle. If the new fighter is still ahead on
+  // the ladder (or is the current foe), the old fighter takes that slot, so there is never a mirror match.
+  changeFighter(run, ch) {
+    if (ch === run.p1) return run;
+    for (let i = run.i; i < run.ladder.length; i++) if (run.ladder[i].ch === ch) run.ladder[i].ch = run.p1;
+    run.p1 = ch; run.g5 = false;
+    endingImg(ch.id);
+    return run;
+  },
   // computer gets a bit tougher for the second half; the boss fights one level above your choice
   level(run, i) {
     if (run.ladder[i].boss) return run.difficulty;   // index into BOSS_AI
@@ -87,15 +96,17 @@ class ArcadeLadderScene {
 
 // ---------------------------------------------------------------- lost a battle
 class ArcadeLoseScene {
-  constructor(run) { this.run = run; this.t = 0; this.sel = 0; this.items = ['REMATCH', 'MAIN MENU']; Sound.playMusic('results'); Announcer.play('game_over', 0.4); }
+  constructor(run) { this.run = run; this.t = 0; this.sel = 0; this.items = ['REMATCH', 'CHANGE FIGHTER', 'MAIN MENU']; Sound.playMusic('results'); Announcer.play('game_over', 0.4); }
   update() {
     this.t++;
     if (this.t < 40) return;
     this.sel = navList(this.sel, this.items.length);
     if (Menu.ok()) {
       Sound.play('confirm');
-      if (this.sel === 0) Game.goto(new FightScene(Arcade.fightOpts(this.run)));
-      else Game.goto(new TitleScene());
+      const it = this.items[this.sel];
+      if (it === 'REMATCH') Game.goto(new FightScene(Arcade.fightOpts(this.run)));
+      if (it === 'CHANGE FIGHTER') Game.goto(new SelectScene('arcade', this.run.difficulty, this.run));
+      if (it === 'MAIN MENU') Game.goto(new TitleScene());
     }
   }
   draw(ctx) {
