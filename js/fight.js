@@ -234,7 +234,7 @@ class FightScene {
   // ------------------------------------------------------------ main update
   update() {
     if (this.paused) { this.updatePause(); return; }
-    if (Input.sys('Escape') || P1In.pressed.start || P2In.pressed.start) { this.paused = true; this.pauseSel = 0; this.showMoves = false; Sound.play('select'); return; }
+    if (Input.sys('Escape') || P1In.pressed.start || P2In.pressed.start) { this.paused = true; this.pauseSel = 0; this.showMoves = false; this.showOpts = false; Sound.play('select'); return; }
     this.frame++;
     if (this.f2.input instanceof CpuInput) this.f2.input.think(this.f2, this.f1, this);
     this.shakeAmt *= 0.86;
@@ -326,6 +326,7 @@ class FightScene {
   updatePause() {
     const items = this.pauseItems();
     if (this.showMoves) { if (Menu.ok() || Menu.back()) { this.showMoves = false; Sound.play('back'); } return; }
+    if (this.showOpts) { this.updatePauseOptions(); return; }
     if (Menu.up()) { this.pauseSel = (this.pauseSel + items.length - 1) % items.length; Sound.play('select'); }
     if (Menu.down()) { this.pauseSel = (this.pauseSel + 1) % items.length; Sound.play('select'); }
     if (Menu.back() && !Input.sys('Escape')) { this.paused = false; return; }
@@ -335,11 +336,29 @@ class FightScene {
       const it = items[this.pauseSel];
       if (it === 'RESUME') this.paused = false;
       if (it === 'MOVE LIST') this.showMoves = true;
+      if (it === 'OPTIONS') { this.showOpts = true; this.optSel = 0; }
       if (it === 'CHARACTER SELECT') Game.goto(new SelectScene(this.mode, this.opts.level));
       if (it === 'MAIN MENU') Game.goto(new TitleScene());
     }
   }
-  pauseItems() { return this.opts.arcade ? ['RESUME', 'MOVE LIST', 'MAIN MENU'] : ['RESUME', 'MOVE LIST', 'CHARACTER SELECT', 'MAIN MENU']; }
+  pauseItems() { return this.opts.arcade ? ['RESUME', 'MOVE LIST', 'OPTIONS', 'MAIN MENU'] : ['RESUME', 'MOVE LIST', 'OPTIONS', 'CHARACTER SELECT', 'MAIN MENU']; }
+  // in-fight options: the settings that make sense mid-match (volumes, announcer), changed live
+  pauseOptRows() {
+    const d = Settings.data, bars = v => '▮'.repeat(Math.round(v * 10)) || 'OFF';
+    return [['MUSIC VOLUME', bars(d.music)], ['SOUND VOLUME', bars(d.sfx)], ['ANNOUNCER VOICE', d.announcer ? 'ON' : 'OFF'], ['BACK', '']];
+  }
+  updatePauseOptions() {
+    const n = this.pauseOptRows().length, d = Settings.data;
+    if (Menu.up()) { this.optSel = (this.optSel + n - 1) % n; Sound.play('select'); }
+    if (Menu.down()) { this.optSel = (this.optSel + 1) % n; Sound.play('select'); }
+    if (Menu.back() || Input.sys('Escape') || (Menu.ok() && this.optSel === n - 1)) { this.showOpts = false; Sound.play('back'); return; }
+    const dir = Menu.left() ? -1 : Menu.right() || Menu.ok() ? 1 : 0;
+    if (!dir) return;
+    if (this.optSel === 0) d.music = clamp(Math.round((d.music + dir * 0.1) * 10) / 10, 0, 1);
+    if (this.optSel === 1) d.sfx = clamp(Math.round((d.sfx + dir * 0.1) * 10) / 10, 0, 1);
+    if (this.optSel === 2) d.announcer = !d.announcer;
+    Settings.save(); Sound.setVolumes(); Sound.play('select');
+  }
 
   // ------------------------------------------------------------ drawing
   draw(ctx) {
@@ -523,6 +542,16 @@ class FightScene {
   drawPause(ctx) {
     ctx.fillStyle = 'rgba(0,0,0,0.7)'; ctx.fillRect(0, 0, W, H);
     if (this.showMoves) { drawMoveList(ctx, this.f1.ch, this.f2.ch); return; }
+    if (this.showOpts) {
+      drawText(ctx, 'OPTIONS', W / 2, 160, 80, '#ffeb3b', '#1a1a1a', 'center', 12);
+      this.pauseOptRows().forEach(([k, v], i) => {
+        const sel = i === this.optSel, y = 290 + i * 80;
+        drawText(ctx, k, v ? 330 : W / 2, y, 42, sel ? '#ffffff' : '#78909c', '#1a1a1a', v ? 'left' : 'center', 7);
+        if (v) drawText(ctx, '◀ ' + v + ' ▶', 900, y, 38, sel ? '#ffeb3b' : '#cfd8dc', '#1a1a1a', 'center', 6);
+      });
+      drawText(ctx, '◀ ▶ change · Back / Esc = return', W / 2, H - 50, 22, '#90a4ae', '#1a1a1a', 'center', 4);
+      return;
+    }
     drawText(ctx, 'PAUSED', W / 2, 180, 90, '#ffeb3b', '#1a1a1a', 'center', 12);
     this.pauseItems().forEach((it, i) => {
       const sel = i === this.pauseSel;

@@ -23,3 +23,4 @@ One Piece 1v1 fighting game for the owner's kids (6–10). Plain HTML5 canvas + 
 - `index.html`, `js/` (game), `sprites/` (cut sprites + `manifest.js`, effect art, endings, title art), `stages/`, `sounds/music`, `sounds/voice`.
 - `tools/`: ComfyUI art pipeline (`gen_sprites.py`, `gen_extra.py`, `chars.py`, `pose_fix.json`, `overlays.json`), music (`make_music.py`), servers, tests. `tools/out/` is gitignored local working data (raw renders, sources).
 - `settings.json` is per-PC, gitignored, auto-created by the server.
+- `js/version.js` = release version; must match the GitHub tag (the in-game updater checks it). Releases: follow `RELEASE_GUIDE.md`.

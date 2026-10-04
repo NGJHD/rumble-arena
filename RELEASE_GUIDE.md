@@ -9,11 +9,13 @@ You need: Git, and the GitHub CLI (`gh`) logged in (`gh auth status` should say 
    git push
    ```
 2. **Pick the new version number** (look at the last one with `gh release list`):
-   - small fix → bump the last number: `v1.0.0` → `v1.0.1`
-   - new stuff → bump the middle: `v1.0.1` → `v1.1.0`
+   - small fix → bump the last number: `v1.0.1` → `v1.0.2`
+   - new stuff → bump the middle: `v1.0.2` → `v1.1.0`
+
+   Then put the same number (without the `v`) in **`js/version.js`** (`const GAME_VERSION = '1.0.2';`), commit and push again. The in-game **UPDATE GAME** button refuses a release whose zip has a different number.
 3. **Make the game zip** (game files only, no art tools). Replace `v1.0.1` with your version:
    ```
-   git archive --format=zip --prefix=RumbleArena/ -o RumbleArena-v1.0.1.zip HEAD index.html js sprites stages sounds Play.bat tools/play.ps1 tools/server.ps1 tools/devserver.py README.md CREDITS.md
+   git archive --format=zip --prefix=RumbleArena/ -o RumbleArena-v1.0.1.zip HEAD index.html js sprites stages sounds Play.bat tools/play.ps1 tools/server.ps1 tools/update.ps1 tools/devserver.py README.md CREDITS.md
    ```
 4. **Publish the release** (this also creates the version tag):
    ```
@@ -26,3 +28,4 @@ You need: Git, and the GitHub CLI (`gh`) logged in (`gh auth status` should say 
 6. Check it on https://github.com/NGJHD/rumble-arena/releases
 
 **To play a release on another PC:** download the zip from the Releases page, unzip it, double-click `Play.bat`.
+After that, **Options → UPDATE GAME** in the game fetches each new release by itself (copies made with `git clone` use `git pull` instead).

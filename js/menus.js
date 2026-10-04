@@ -378,6 +378,7 @@ class OptionsScene {
       ['ANNOUNCER VOICE', d.announcer ? 'ON' : 'OFF'],
       ['AUTO FULLSCREEN', d.autoFull ? 'ON' : 'OFF'],
       ['CONTROLS', ''],
+      ['UPDATE GAME', 'v' + GAME_VERSION],
       ['BACK', ''],
     ];
   }
@@ -398,10 +399,11 @@ class OptionsScene {
     const rows = this.rows();
     this.sel = navList(this.sel, rows.length);
     MenuMem.options = this.sel;
-    const isControls = rows[this.sel][0] === 'CONTROLS';
+    const isControls = rows[this.sel][0] === 'CONTROLS' || rows[this.sel][0] === 'UPDATE GAME';
     if (Menu.left() && !isControls) this.change(-1);
     if (Menu.right() && !isControls) this.change(1);
     if (Menu.back() || (Menu.ok() && this.sel === rows.length - 1)) { Sound.play('back'); MenuMem.options = 0; Game.goto(new TitleScene()); return; }
+    if (Menu.ok() && rows[this.sel][0] === 'UPDATE GAME') { Sound.play('confirm'); Game.goto(new UpdateScene()); return; }
     if (Menu.ok() && isControls) { Sound.play('confirm'); Game.goto(new ControlsScene()); return; }
     if (Menu.ok()) this.change(1);
   }
@@ -409,9 +411,9 @@ class OptionsScene {
     menuBg(ctx, this.t, '#263238', '#4a148c');
     drawText(ctx, 'OPTIONS', W / 2, 70, 70, '#ffeb3b', '#1a1a1a', 'center', 10);
     this.rows().forEach(([k, v], i) => {
-      const s = i === this.sel, y = 160 + i * 68;
+      const s = i === this.sel, y = 150 + i * 62;
       drawText(ctx, k, 300, y, 36, s ? '#ffffff' : '#90a4ae', s ? '#d50000' : '#1a1a1a', 'left', 6);
-      if (v) drawText(ctx, '◀ ' + v + ' ▶', 900, y, 34, '#ffffff', '#1a1a1a', 'center', 6);
+      if (v) drawText(ctx, k === 'UPDATE GAME' ? v : '◀ ' + v + ' ▶', 900, y, 34, '#ffffff', '#1a1a1a', 'center', 6);
     });
   }
 }
