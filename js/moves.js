@@ -82,6 +82,7 @@ function pillarX(f) {
 function buildSpecial(spec, ch) {
   const d = buildSpecialBase(spec, ch);
   if (d && spec.style && typeof SPECIAL_STYLES !== 'undefined' && SPECIAL_STYLES[spec.style]) SPECIAL_STYLES[spec.style](d, spec, ch);
+  if (d && spec.spritePose) d.spritePose = spec.spritePose;   // e.g. Arlong's Shark Darts shows his torpedo sprite
   return d;
 }
 
@@ -156,7 +157,7 @@ function buildSpecialBase(spec, ch) {
       return Object.assign(base, {
         startup: 13, active: 26, recovery: 16, pose: 'cast', gravity: false, spawnAt: 13, cd: 50,
         spawn(f, g) {
-          g.addEnt(new Beam({ owner: f, hand: handPt(f), art: spec.art, off: 45, yOff: 95, len: 640 * (spec.big || 1), h: 56 * (spec.big || 1), life: 26, hits: 4, hitEvery: 6, elem: e, hit: fin({ dmg: Math.round(D / 4), hitstun: 30, kb: [9, -7], launch: -7 }) }));
+          g.addEnt(new Beam({ owner: f, hand: handPt(f), art: spec.art, bolt: spec.bolt, off: 45, yOff: 95, len: 640 * (spec.big || 1), h: 56 * (spec.big || 1), life: 26, hits: 4, hitEvery: 6, elem: e, hit: fin({ dmg: Math.round(D / 4), hitstun: 30, kb: [9, -7], launch: -7 }) }));
           Sound.play('beam');
         },
       });
@@ -164,6 +165,7 @@ function buildSpecialBase(spec, ch) {
       return Object.assign(base, {
         startup: 12, active: 2, recovery: 20, pose: style === 'sword' ? 'bigslash' : 'slam', spawnAt: 12, cd: 45,
         spawn(f, g) {
+          if (spec.split) f.split = { mode: 'legs', t: 80 };
           g.addEnt(new Wave({ owner: f, x: f.x + f.facing * 60, vx: f.facing * 11, w: 70, h: 140, elem: e, art: spec.art, hits: 1, clash: true, hit: fin({ dmg: D, hitstun: 32, kb: [8, -11], launch: -11 }) }));
           Sound.elem(e); g.shake(6);
         },
@@ -251,6 +253,7 @@ function buildSuper(spec, ch, lvl) {
       return Object.assign(base, {
         startup: 22, active: 2, recovery: 50, pose: 'charge', spawnAt: 22,
         spawn(f, g) {
+          if (spec.split) f.split = { mode: 'head', t: (lvl === 3 ? 84 : 62) + 30 };
           g.addEnt(new Screen({ owner: f, art: spec.art, life: lvl === 3 ? 84 : 62, hits: lvl === 3 ? 13 : 9, hitEvery: 6, elem: e, isSuper: true, finalFx: spec.finalFx, m, hit: fin({ dmg: Math.round(26 * m), hitstun: 40, kb: [12, -14], launch: -14 }) }));
           Sound.elem(e); Sound.play('explode'); g.shake(14);
         },
@@ -336,6 +339,14 @@ class Beam extends Ent {
           ctx.quadraticCurveTo(r.x + r.w / 2, yy + wob, r.x + r.w, yy - wob * 0.5); ctx.stroke();
         }
       }
+      ctx.globalCompositeOperation = 'source-over';
+      return;
+    }
+    if (this.bolt) {
+      ctx.globalCompositeOperation = 'lighter';
+      const x1 = this.owner.facing > 0 ? r.x : r.x + r.w, x2 = this.owner.facing > 0 ? r.x + r.w : r.x;
+      for (let i = 0; i < 3; i++) drawBolt(ctx, x1, cy + rand(-6, 6), x2, cy + rand(-h * 0.4, h * 0.4), i ? '#fff176' : '#ffffff', h * (i ? 0.08 : 0.16));
+      ctx.globalAlpha = 0.25; ctx.fillStyle = '#40c4ff'; ctx.fillRect(r.x, cy - h * 0.3, r.w, h * 0.6); ctx.globalAlpha = 1;
       ctx.globalCompositeOperation = 'source-over';
       return;
     }

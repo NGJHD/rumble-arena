@@ -5,6 +5,117 @@ ELEM.bluefire = ['#e1f5fe', '#40c4ff', '#1565c0'];
 ELEM.twister = ['#e1f5fe', '#7e57c2', '#283593'];
 
 const SUPER_TYPES = {
+  // Buggy Chop-Chop Festival: only his head stays; hands with knives and his spinning legs dart in and out through the enemy
+  festival(spec, ch, X) {
+    return Object.assign(X.base, {
+      startup: 16, active: 2, recovery: 30, pose: 'charge', spritePose: 'super', spawnAt: 16,
+      spawn(f, g) {
+        const life = X.lvl === 3 ? 96 : 76;
+        f.split = { mode: 'head', t: life + 30 };
+        g.addEnt(new BuggyParts({ owner: f, life, hits: X.lvl === 3 ? 13 : 10, hitEvery: 7, elem: X.e, isSuper: true,
+          hit: X.fin({ dmg: Math.round(29 * X.m), hitstun: 40, kb: [10, -14], launch: -14 }) }));
+        Sound.play('whoosh'); FX.smoke(f.x, f.y - f.height * 0.4, 14, 'rgba(255,255,255,0.8)');
+      },
+    });
+  },
+  // Buggy MAX: a giant cannon rolls in behind him and fires the Special Buggy Ball out of its muzzle.
+  // Sized to the owner's sketch: barrel on the ground behind Buggy, muzzle ~300 px tall just behind him, ball = muzzle.
+  // Art: muzzle opening = 83% of the image height, centred 43% from the top, at the right edge.
+  cannon(spec, ch, X) {
+    const CH = 360, CW = CH * 512 / 200;                 // drawn cannon size
+    const R = CH * 0.83 / (0.72 * (spec.artK || 2.3));   // ball radius so the drawn sphere (72% of the art height) fills the muzzle
+    const pos = (f, k) => {
+      const mx = f.x - f.facing * 110;                   // final muzzle x: the whole cannon sits behind Buggy so the ball starts at him (full hits even point-blank)
+      return { cx: mx - f.facing * CW / 2 - f.facing * (1 - k) * 900, mx: mx - f.facing * (1 - k) * 900, my: GROUND_Y - CH * 0.57 };
+    };
+    return Object.assign(X.base, {
+      startup: 34, active: 2, recovery: 40, pose: 'charge', spritePose: 'super', spawnAt: 34,
+      onFrame(f, fr, g, a) {
+        if (fr === 1) { a.cannon = { k: 0, recoil: 0 }; Sound.play('dash'); }
+        if (a.cannon && fr <= 34) { const t = Math.min(1, fr / 22); a.cannon.k = t * (2 - t); if (fr % 3 === 0) FX.dust(pos(f, a.cannon.k).cx, GROUND_Y, 2); if (fr === 22) g.shake(8); }
+        if (fr === 34) { const p = pos(f, 1); g.shake(18); Sound.play('explode'); FX.burst(p.mx, p.my, 'fire', 30, 12, 14, 30); FX.smoke(p.mx, p.my, 14, 'rgba(255,255,255,0.8)'); FX.comic(p.mx, p.my - 160, 'BOOM!', 4); }
+        if (a.cannon && fr > 34) a.cannon.recoil = Math.max(0, 1 - (fr - 34) / 14);
+      },
+      drawUnder(f, ctx, a) {
+        if (!a.cannon || a.f > 70) return;
+        const p = pos(f, a.cannon.k), rc = (a.cannon.recoil || 0) * 40 * f.facing;
+        drawArt(ctx, 'buggycannon', p.cx - rc, GROUND_Y + 6, CH, { ay: 1, flip: f.facing < 0, alpha: Math.min(1, (74 - a.f) / 8) });
+      },
+      spawn(f, g) {
+        const p = pos(f, 1), artH = R * (spec.artK || 2.3), y0 = p.my - artH * 0.1, sp = spec.speed || 9;
+        // dips from the muzzle down to the enemy's body height
+        const vy = 0;   // the ball is as tall as a fighter, so it flies straight out of the muzzle
+        g.addEnt(new Proj({ owner: f, x: p.mx + f.facing * R * 0.5, y: y0, vx: f.facing * sp, vy, r: R, sprite: 'cannonball', art: spec.art, artK: spec.artK, elem: X.e,
+          hits: 10, hitEvery: 5, life: 220, isSuper: true, clash: true, hit: X.fin({ dmg: Math.round(26 * X.m), hitstun: 40, kb: [14, -14], launch: -14 }) }));
+      },
+    });
+  },
+  // Marco Phoenix Brand: he becomes the blue phoenix, flies forward, and reappears where it ends
+  beastform(spec, ch, X) {
+    const col = ec(X.e, 1);
+    return Object.assign(X.base, {
+      startup: 16, active: 50, recovery: 18, pose: 'charge', spritePose: 'super', invuln: [0, 70],
+      onFrame(f, fr, g, a) {
+        if (fr === 1) { FX.smoke(f.x, f.y - f.height * 0.5, 16, col); Sound.play('super'); }
+        if (fr === 17) {
+          f.hidden = true; a.beast = true;
+          g.addEnt(new Proj({ owner: f, x: f.x, y: f.y - f.height * 0.55, vx: f.facing * 14, r: 130 * X.big, sprite: 'bird', art: spec.art, artK: spec.artK || 2.2, elem: X.e,
+            hits: X.lvl === 3 ? 14 : 10, hitEvery: 4, life: 50, isSuper: true, dragonOf: f, hit: X.fin({ dmg: Math.round(24 * X.m), hitstun: 44, kb: [16, -14], launch: -14 }) }));
+          g.shake(12); Sound.elem(X.e); FX.ring(f.x, f.y - f.height * 0.5, col, 20, 260, 18, 10);
+        }
+        if (a.beast && fr > 17 && fr <= a.activeEnd) {
+          const b = g.ents.find(e => e.dragonOf === f && !e.dead);
+          if (b) f.x = clamp(b.x, g.camX + 40, g.camX + W - 40);
+          f.hidden = true;
+        }
+        if (fr === a.activeEnd) { f.hidden = false; FX.smoke(f.x, f.y - f.height * 0.5, 16, col); FX.ring(f.x, f.y - f.height * 0.5, col, 20, 200, 14, 8); }
+      },
+    });
+  },
+  // Arlong Shark Tooth Drill: one dash forward, then he stays nose-first in the enemy's midsection,
+  // drilling: many quick hits that hold the enemy in place, the last one launches. No cinematic, no vanishing.
+  drill(spec, ch, X) {
+    const n = X.lvl === 3 ? 18 : 14;
+    return Object.assign(X.base, {
+      startup: 8, active: 30, recovery: 22, spritePose: 'special', pose: 'rush', roll: true,
+      box: { x: -10, y: -140, w: 150, h: 110 }, hits: n, hitEvery: 3, stopOnHit: true, passThrough: false,
+      hit: X.fin({ dmg: Math.round(16 * X.m), hitstun: 46, kb: [14, -13], launch: -13 }),
+      multi: { hitstun: 14, kb: [0.3, 0] },
+      onFrame(f, fr, g, a) {
+        if (fr === 8) { Sound.play('dash'); Sound.elem(X.e); }
+        if (fr <= 8) return;
+        const o = f.opp;
+        if (a.connected && a.hitsDone < n) {
+          // pinned: nose in the enemy's belly
+          f.vx = 0; f.x = o.x - f.facing * (o.width ? o.width * 0.5 : 40) - f.facing * 95 * f.hs; f.y = GROUND_Y;
+          if (o.state === 'hit') { o.vx = 0; o.x = clamp(o.x, g.camX + 40, g.camX + W - 40); }
+          const nx = f.x + f.facing * 130 * f.hs, ny = f.y - f.height * 0.5;
+          if (fr % 2 === 0) FX.ring(nx, ny, fr % 4 ? '#ffffff' : ec(X.e, 1), 15, 75, 6, 3);
+          FX.burst(nx, ny, X.e, 2, 6, 8, 16);
+          if (fr % 6 === 0) { g.shake(5); Sound.play('hitL'); }
+        } else if (!a.connected && fr <= a.activeEnd) {
+          f.vx = f.facing * 20; f.trail = 6;
+          if (fr % 2) FX.ring(f.x + f.facing * 110 * f.hs, f.y - f.height * 0.5, ec(X.e, 1), 10, 60, 6, 3);
+        } else f.vx *= 0.6;
+      },
+    });
+  },
+  // Kuma Ursa Shock: a paw bubble appears at a distance and swells until it fills the screen, then bursts
+  ursa(spec, ch, X) {
+    return Object.assign(X.base, {
+      startup: 14, active: 2, recovery: 40, pose: 'charge', spritePose: 'super', spawnAt: 14,
+      spawn(f, g) {
+        g.addEnt(new PawBubble({ owner: f, x: f.x + f.facing * 300 * f.hs, life: X.lvl === 3 ? 80 : 66, hits: X.lvl === 3 ? 12 : 9, hitEvery: 5, elem: X.e, isSuper: true,
+          hit: X.fin({ dmg: Math.round(24 * X.m), hitstun: 44, kb: [10, -16], launch: -16 }) }));
+        Sound.elem(X.e); g.shake(6);
+      },
+    });
+  },
+  // two different supers: lv1 for 1 bar, max for LEVEL 3 (Buggy: Festival / Special Buggy Ball, Enel: Amaru / Raigo)
+  dual(spec, ch, o) {
+    const sub = o.lvl === 3 ? Object.assign({}, spec.max, { name: spec.maxName || spec.name }) : Object.assign({}, spec.lv1, { name: spec.name });
+    return buildSuper(sub, ch, o.lvl);
+  },
   // Luffy: a storm of stretching fists
   gatling(spec, ch, X) {
     return Object.assign(X.base, {
@@ -470,6 +581,47 @@ class StigmaStrike extends Ent {
       if (!drawArt(ctx, 'stigma', x, tipY, 420, { ay: 1, alpha: fade })) {
         ctx.fillStyle = '#111'; ctx.fillRect(x - 10, tipY - 420, 20, 420);
       }
+    }
+  }
+}
+
+class PawBubble extends Ent {
+  constructor(o) { super(o); this.max = this.life; }
+  size() { return lerp(60, H * 1.05, Math.min(1, this.t / (this.max * 0.75)) ** 1.6); }
+  rect() { const s = this.size(); return this.t > 6 ? { x: this.x - s * 0.45, y: GROUND_Y - s, w: s * 0.9, h: s } : null; }
+  update(g) {
+    super.update(g);
+    if (this.t % 8 === 0) g.shake(4 + this.t / 10);
+    if (this.life === 1) { g.shake(18); Sound.play('explode'); FX.ring(this.x, GROUND_Y - this.size() / 2, '#e1f5fe', 40, 500, 18, 12); FX.comic(this.x, GROUND_Y - 300, 'BOOM!', 4); }
+  }
+  draw(ctx) {
+    const s = this.size(), y = GROUND_Y - s / 2, wob = 1 + Math.sin(this.t * 0.6) * 0.03;
+    if (!drawArt(ctx, 'ursashock', this.x, y, s * wob, { alpha: Math.min(1, this.life / 6) })) {
+      ctx.globalAlpha = 0.6; ctx.fillStyle = '#e1f5fe'; ctx.beginPath(); ctx.arc(this.x, y, s / 2, 0, TAU); ctx.fill(); ctx.globalAlpha = 1;
+    }
+  }
+}
+
+// Buggy's flying body parts: each piece swoops through the target on its own figure-eight path
+class BuggyParts extends Ent {
+  constructor(o) {
+    super(o);
+    this.parts = [['buggyhand', 0, 1, 70], ['buggyhand', 2.1, -1, 70], ['buggysaw', 4.2, 1, 95], ['buggyhand', 1.05, -1, 60], ['buggysaw', 3.15, -1, 80]];
+  }
+  tgt() { const o = this.owner.opp; return { x: o.x, y: o.y - o.height * 0.5 }; }
+  rect() { const o = this.owner.opp; return this.t > 8 && this.life > 6 ? { x: o.x - 70, y: o.y - o.height, w: 140, h: o.height } : null; }
+  pos(p) {
+    const T = this.tgt(), o = this.owner, a = this.t * 0.11 * p[2] + p[1], back = Math.min(1, this.t / 12, this.life / 12);
+    // start at Buggy, swing out through the target and back, looping
+    const cx = lerp(o.x, T.x, back), rx = 230 * back, ry = 110 * back;
+    return { x: cx + Math.cos(a) * rx, y: T.y + Math.sin(a * 2) * ry * 0.6, ang: a };
+  }
+  update(g) { super.update(g); if (this.t % 7 === 0) Sound.play('whoosh'); }
+  draw(ctx) {
+    for (const p of this.parts) {
+      const q = this.pos(p), dx = -Math.sin(q.ang) * p[2];
+      if (!drawArt(ctx, p[0], q.x, q.y, p[3], { flip: dx < 0, rot: p[0] === 'buggysaw' ? this.t * 0.4 : 0 })) { ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(q.x, q.y, 20, 0, TAU); ctx.fill(); }
+      if (this.t % 3 === 0) FX.burst(q.x, q.y, 'slash', 1, 2, 6, 14);
     }
   }
 }

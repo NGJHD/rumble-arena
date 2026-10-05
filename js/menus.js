@@ -83,7 +83,7 @@ class DifficultyScene {
 }
 
 // ---------------------------------------------------------------- character select
-const SEL_COLS = 9, SLOT_W = 118, SLOT_H = 92, SLOT_GAP = 6;
+const SEL_COLS = 12, SLOT_W = 98, SLOT_H = 92, SLOT_GAP = 6;
 const SEL_X0 = (W - (SEL_COLS * (SLOT_W + SLOT_GAP) - SLOT_GAP)) / 2, SEL_Y0 = 420;
 class SelectScene {
   constructor(mode, level, cont) {
@@ -97,19 +97,22 @@ class SelectScene {
     this.arcade = mode === 'arcade';   // arcade: only you pick; opponents and stages come from the ladder
     Sound.playMusic('menu');
   }
-  slotPos(i) { return { x: SEL_X0 + (i % SEL_COLS) * (SLOT_W + SLOT_GAP), y: SEL_Y0 + Math.floor(i / SEL_COLS) * (SLOT_H + SLOT_GAP) }; }
+  // rows of 11-12-11 (or as many 12s as needed), each row centred
+  rows() { const r = this.n === 34 ? [11, 12, 11] : []; if (!r.length) for (let k = this.n; k > 0; k -= SEL_COLS) r.push(Math.min(SEL_COLS, k)); return r; }
+  rowCol(i) { const R = this.rows(); let row = 0; while (i >= R[row]) { i -= R[row]; row++; } return { row, col: i, len: R[row] }; }
+  index(row, col) { const R = this.rows(); let i = 0; for (let k = 0; k < row; k++) i += R[k]; return i + col; }
+  slotPos(i) { const { row, col, len } = this.rowCol(i), x0 = (W - (len * (SLOT_W + SLOT_GAP) - SLOT_GAP)) / 2; return { x: x0 + col * (SLOT_W + SLOT_GAP), y: SEL_Y0 + row * (SLOT_H + SLOT_GAP) }; }
   // slot index locked by the other player (null if none) - those slots are skipped
   takenSlot(p) { const q = 1 - p; return this.locked[q] && this.pick[q] ? ROSTER.indexOf(this.pick[q]) : null; }
   step(c, dir) {
-    const rows = Math.ceil(this.n / SEL_COLS), col = c % SEL_COLS, row = Math.floor(c / SEL_COLS);
-    if (dir === 'left') c = row * SEL_COLS + (col + SEL_COLS - 1) % SEL_COLS;
-    if (dir === 'right') c = row * SEL_COLS + (col + 1) % SEL_COLS;
-    if (dir === 'up') c -= SEL_COLS;
-    if (dir === 'down') c += SEL_COLS;
-    if (c < 0) c += rows * SEL_COLS;
-    if (c >= rows * SEL_COLS) c -= rows * SEL_COLS;
-    if (c >= this.n) c = dir === 'right' ? row * SEL_COLS : this.n - 1;
-    return c;
+    const R = this.rows(), { row, col, len } = this.rowCol(c);
+    if (dir === 'left') return this.index(row, (col + len - 1) % len);
+    if (dir === 'right') return this.index(row, (col + 1) % len);
+    // up/down: the slot in the next row whose centre is nearest
+    const nr = (row + (dir === 'up' ? R.length - 1 : 1)) % R.length, x = this.slotPos(c).x;
+    let best = 0, bd = 1e9;
+    for (let k = 0; k < R[nr]; k++) { const d = Math.abs(this.slotPos(this.index(nr, k)).x - x); if (d < bd) { bd = d; best = k; } }
+    return this.index(nr, best);
   }
   move(p, inp) {
     const dir = ['left', 'right', 'up', 'down'].find(k => inp.pressed[k]);
@@ -196,7 +199,8 @@ class SelectScene {
       else drawText(ctx, '?', x + SLOT_W / 2, y + SLOT_H / 2, 64, '#ffeb3b', '#1a1a1a', 'center', 8);
       ctx.restore();
       ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.fillRect(x, y + SLOT_H - 20, SLOT_W, 20);
-      drawText(ctx, ch ? ch.name : 'RANDOM', x + SLOT_W / 2, y + SLOT_H - 10, 16, '#ffffff', null);
+      const nm = ch ? ch.name : 'RANDOM';
+      drawText(ctx, nm, x + SLOT_W / 2, y + SLOT_H - 10, nm.length > 8 ? 13 : 16, '#ffffff', null);
       ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth = 3; ctx.strokeRect(x, y, SLOT_W, SLOT_H);
       const takenBy = [0, 1].find(q => this.locked[q] && this.pick[q] === ch && ch);
       if (takenBy != null) {

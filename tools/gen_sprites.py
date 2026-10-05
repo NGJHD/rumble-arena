@@ -152,6 +152,9 @@ BG_FOR = {'usopp': 'magenta', 'mihawk': 'magenta'}
 # per-fighter anatomy note for pose prompts (default: two arms, two hands)
 LIMBS = {
     'crocodile': 'Exactly two arms: a normal RIGHT hand; the LEFT arm ends in a golden hook with NO hand at all (the hook is not held by any hand). No extra limbs.',
+    'enel': 'Exactly two arms and two hands, both attached at the shoulders. Exactly four small golden drums on ONE golden ring behind his back (the ring is not held). No extra limbs, no extra drums.',
+    'kuma': 'Exactly two arms and two hands, both attached at the shoulders; the small book is held by one of those two hands. No extra arms, no extra hands.',
+    'buggy': 'Exactly two arms and two hands, both attached at the shoulders (his body is not split apart). No extra arms, no extra hands.',
 }
 
 

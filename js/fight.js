@@ -26,7 +26,7 @@ class FightScene {
     this.ents = [];
     this.f1.reset(STAGE_W / 2 - 230, 1);
     this.f2.reset(STAGE_W / 2 + 230, -1);
-    if (this.mode === 'training') this.f1.meter = MAX_METER;
+    if (this.mode === 'training') this.f1.meter = BAR;
     this.camX = STAGE_W / 2 - W / 2;
     this.timer = Settings.data.time; this.timerF = 0;
     this.phase = this.mode === 'training' ? 'fight' : this.opts.boss && this.round === 1 ? 'bossIntro' : 'intro'; this.phaseT = 0;
@@ -266,7 +266,8 @@ class FightScene {
     this.updateCamera();
     FX.update();
     if (this.mode === 'training') {
-      this.f1.meter = MAX_METER;
+      // recharge about one bar per second when not in a super, so level 1 supers can be tested too
+      const f1 = this.f1; if (!(f1.state === 'attack' && f1.atk && f1.atk.data.isSuper)) f1.meter = Math.min(MAX_METER, f1.meter + BAR / 60);
       if (this.f2.state !== 'hit' && this.f2.state !== 'locked' && this.f2.hp < MAX_HP && ++this.refill > 50) { this.f2.hp = MAX_HP; this.f2.hpRed = MAX_HP; }
       if (this.f2.state === 'hit') this.refill = 0;
     }

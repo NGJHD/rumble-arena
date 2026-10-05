@@ -680,7 +680,8 @@ function drawSprite(ctx, s, x, y, facing, fr, targetH, filter) {
   ctx.translate(x + (fr.dx || 0) * facing, y + (fr.dy || 0));
   ctx.scale(facing, 1);
   if (fr.rot) { ctx.translate(0, -dh / 2); ctx.rotate(fr.rot); ctx.translate(0, dh / 2); }
-  ctx.scale(fr.sx || 1, fr.sy || 1);
+  if (fr.midScale) { ctx.translate(0, -dh / 2); ctx.scale(fr.sx || 1, fr.sy || 1); ctx.translate(0, dh / 2); }   // flip around the body's middle (drill spin)
+  else ctx.scale(fr.sx || 1, fr.sy || 1);
   if (filter) ctx.filter = filter;
   const ax = fr.center ? 0.5 : s.m.ax;
   ctx.drawImage(s.img, -ax * dw, -dh, dw, dh);

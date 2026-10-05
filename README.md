@@ -1,6 +1,6 @@
 # Rumble Arena
 
-A flashy 1v1 fighting game with 25 chibi One Piece fighters, made for kids. Plain HTML + JavaScript: no install, no build step.
+A flashy 1v1 fighting game with 33 chibi One Piece fighters, made for kids. Plain HTML + JavaScript: no install, no build step.
 
 ## Play
 - **Windows:** double-click **`Play.bat`**. It starts a tiny local server (Windows' built-in PowerShell, nothing to install) and opens the game in its own window with the music playing. Settings are saved to `settings.json` in this folder.

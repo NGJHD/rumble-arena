@@ -32,6 +32,14 @@ CHARS = {
     'law': ("Trafalgar Law", "white fuzzy hat with brown spots, black goatee, tired eyes, yellow and black hoodie with a smiley jolly roger, spotted jeans, holding a long nodachi sword, his sword is Kikoku: a very long nodachi, black sheath with a pattern of white crosses, red tassel and white fluffy fur at the guard; his white fluffy spotted hat is solid white with brown spots", 'sword', 'blue glowing dome'),
     'hancock': ("Boa Hancock", "beautiful tall woman, very long straight black hair with bangs, gold snake earrings, elegant purple chinese-style dress with a high side slit and gold trim, purple heels, proud haughty look, solid jet-black hair with no white streaks or white highlights", 'kick', 'pink hearts'),
     'garp': ("Monkey D. Garp", "big old muscular marine hero, spiky white hair, white beard, scar over left eye, huge toothy grin, white Marine coat over shoulders, dark suit, his white spiky hair and white coat are solid opaque white", 'punch', 'black and red haki'),
+    'buggy': ("Buggy the Clown", "Buggy the Clown: big round shiny red clown nose, long light-blue hair in two long ponytails, white pirate captain tricorn hat with a black crossbones mark, green dotted bandana under the hat, wide grin with a red lip outline, white captain coat over his shoulders with gold epaulettes, white ruffled cravat, green sash, puffy dark red and brown striped pants, brown boots, white gloves holding small throwing knives between his fingers", 'punch', 'flying knives and confetti'),
+    'smoker': ("Smoker", "Smoker the Marine: short spiky white hair swept up, stern angry scowl, red eyes, a lit cigar in his mouth, open white jacket with thick green fur trim on the collar, front and cuffs, bare muscular chest, brown leather strap holding spare cigars on his chest, brown gloves, black belt, dark blue jeans, brown boots, holding his jitte: ONE long straight plain silver metal rod with a dark red wrapped handle at one end, a single short side prong just above the handle, and a plain blunt rounded tip at the other end (the tip has no blade, no fork, no spike, no hook, no hammer head, no cross guard; it is not a sword or spear); no wings, no text", 'staff', 'white smoke'),
+    'marco': ("Marco the Phoenix", "Marco: blond hair shaped like a pineapple (spiky on top, short on the sides), sleepy half-closed eyes, small blond goatee, open purple long-sleeve shirt showing his chest with a dark blue Whitebeard cross tattoo, light blue sash tied around his waist with a gold-studded belt, dark navy knee-length pants, sandals, blue and yellow phoenix flames burning on his forearms", 'kick', 'blue and yellow phoenix flames'),
+    'sabo': ("Sabo", "Sabo: black top hat with blue goggles on the band, wavy shoulder-length blond hair, burn scar around his left eye, confident grin, long black coat with tails, navy blue double-breasted vest, white shirt with a blue cravat, light blue-grey pants, black boots, brown gloves, holding ONE long straight dark grey metal pipe with a short bent tip at one end (his only weapon)", 'staff', 'orange fire and dragon claws'),
+    'yamato': ("Yamato", "Yamato: young warrior with a cute face, very long white hair tied in a high ponytail that fades to mint green at the tips, two red curved oni horns, red eyes, fierce fanged grin, thick purple shimenawa rope with white beads worn over the shoulders, white sleeveless kimono top, red hakama pants, wooden geta sandals, holding ONE big black iron kanabo club with round studs along its thick end (single-ended, no chain, no blade)", 'sword', 'icy blue frost and white lightning'),
+    'arlong': ("Arlong", "Arlong: sawshark fishman with blue-purple skin, a long jagged saw-shaped nose pointing forward, a huge grin full of sharp triangular shark teeth, long wavy black hair, brown aviator cap with a white fluffy fur trim, gills on his neck, open yellow shirt, grey sash, dark brown pants, brown boots, holding his Kiribachi: ONE giant long black saw sword with six shark-tooth shaped notches along one edge and a plain handle (no guard)", 'sword', 'water'),
+    'kuma': ("Bartholomew Kuma", "Bartholomew Kuma: towering huge bulky man with a big round body, white cap with small round bear ears and black spots, small rectangular glasses, curly black hair, calm expressionless face, long black zipped coat with a big white crosshair circle symbol on the chest, grey pants with black spots, brown shoes, a small purple book (bible) held in one hand, pink paw pads on his palms", 'punch', 'paw-shaped air shockwaves'),
+    'enel': ("Enel", "Enel: very long stretched earlobes, white cloth headwrap, short blond hair, arrogant bored half-closed eyes, bare muscular chest, a golden ring behind his back with four small golden drums marked with black triple-comma (tomoe) symbols, wide baggy orange pants with black spots, blue sash, barefoot, holding ONE long thin golden staff with a small golden prong at the top", 'staff', 'blue-white lightning'),
 }
 
 # Each pose: (name, instruction by attack style)
@@ -59,6 +67,73 @@ def poses(style, fx):
 
 # Per-fighter pose overrides
 POSE_OVERRIDES = {
+    'buggy': {
+        'attack': 'throwing a straight punch to the right with his right fist holding small throwing knives between the fingers, his left arm pulled back, exactly two arms',
+        'special': 'Chop-Chop Cannon: flinging his right arm straight forward to the right, small knives fanned between his fingers, his left arm back at his side, exactly two arms',
+        'super': 'Chop-Chop Festival: laughing wildly with arms spread wide, colorful confetti and spinning knives around him, exactly two arms',
+        'jump': 'mid-air jump, both feet high off the ground, knees tucked up, both arms raised high above his head with a knife in each gloved hand, exactly two arms and two hands (nothing near his face)',
+        'block': 'blocking with both forearms crossed in an X in front of his chest, one gloved fist on each side of the X, exactly two arms and two hands',
+        'ko': 'knocked out lying flat on his back on the ground, side view, body stretched out horizontally, dizzy swirly eyes, arms limp at his sides',
+    },
+    'smoker': {
+        'idle': 'in a ready stance holding his ONE jitte (a long straight silver rod with a single short side prong) in his right hand, left fist raised',
+        'special': 'White Blow: punching his LEFT fist straight forward to the right with a thick cloud of white smoke bursting from the fist, his ONE jitte held back in his right hand',
+        'super': 'White Out: both arms spread wide, thick white smoke pouring from his arms and swirling around him, his ONE jitte in his right hand, both feet visible on the ground',
+        'block': 'blocking by holding his ONE jitte horizontally in front of his chest with both hands',
+        'attack': 'side view, swinging his ONE jitte in a wide horizontal strike to the right: his right arm stretched straight out to the right at shoulder height holding the jitte by the red handle, the whole rod pointing forward far in front of him (NOT held across his chest), his left fist pulled back at his hip',
+        'hurt': 'flinching from a hit, upper body bent back, eyes squeezed shut, his right hand still gripping his ONE jitte by the red handle, his left arm flung out',
+        'win': 'confident victory pose resting his ONE jitte on his shoulder by the red handle, his other fist raised',
+    },
+    'marco': {
+        'attack': 'doing a powerful straight front kick to the right, blue and yellow phoenix flames on his kicking foot, exactly two arms',
+        'special': 'Bluebird: pointing his right index and middle finger forward to the right, a swirling ball of blue and yellow phoenix flame forming in front of his fingers, his left arm at his side; both hands are bare skin-colored hands (no gloves, not grey)',
+        'block': 'blocking with both bare forearms crossed in an X in front of his face, small blue flames on the forearms, braced defensive stance, mouth closed, exactly two arms',
+        'super': 'Phoenix Brand: leaping with both legs pulled up ready for a two-legged kick, his arms spread wide and burning as big blue and yellow phoenix flame wings, both feet off the ground',
+    },
+    'sabo': {
+        'idle': 'in a ready stance holding his ONE metal pipe in his right hand resting on his shoulder, left hand open like a dragon claw',
+        'special': 'Dragon Claw: lunging forward to the right with his LEFT hand shaped like a dragon claw (fingers bent like talons) glowing with dark haki, his ONE metal pipe held back in his right hand',
+        'super': 'Flame Dragon King: both hands shaped like dragon claws (fingers bent like talons) wreathed in orange fire, arms spread, flames swirling around him, no pipe anywhere in this picture, exactly two arms',
+        'attack': 'side view, swinging his ONE metal pipe in a wide horizontal strike to the right: his right arm stretched straight out to the right at shoulder height, the whole pipe pointing forward far in front of him (NOT resting on his shoulder, NOT behind his neck), his left hand open like a claw at his side',
+        'kick': 'side view, deep forward lunge to the right, both arms stretched straight forward thrusting his ONE metal pipe horizontally like a spear, the bent tip of the pipe far out in front of him (NOT resting on his shoulder)',
+        'hurt': 'flinching from a hit, upper body bent back, eyes squeezed shut, his right hand still gripping his ONE metal pipe, his left arm flung out',
+        'ko': 'knocked out lying flat on his back, side view, dizzy swirly eyes, still wearing his ONE top hat on his head (no other hat anywhere), exactly ONE metal pipe lying on the ground next to his hand',
+        'block': 'blocking by holding his ONE metal pipe upright and vertical in front of his chest with both hands wrapped around it, elbows bent, braced stance, exactly two arms and two hands in total, each hand at the end of its own arm',
+    },
+    'yamato': {
+        'idle': 'in a ready stance holding ONE black kanabo club with both hands, resting it on the shoulder',
+        'special': 'Namuji Glacier Fang: leaning forward and breathing a blast of icy blue frost from the mouth toward the right, holding ONE black kanabo club low at the side with both hands; nothing else behind the body (no mace ball, no second weapon)',
+        'attack': 'swinging ONE black kanabo club in a wide horizontal strike to the right, the club stretched far out in front at chest height, both hands on the handle',
+        'super': 'Thunder Bagua: raising ONE black kanabo club high over the shoulder with both hands, the club whole and unbroken, thin zigzag bolts of white lightning arcing around it (outside the club, no cracks on the club), fierce grin',
+        'block': 'blocking by holding ONE black kanabo club horizontally in front of the chest with both hands',
+        'hurt': 'flinching from a hit, upper body bent back, eyes squeezed shut, BOTH hands gripping ONE black kanabo club close together at its handle, exactly two arms and two hands in total, each hand at the end of its own arm (no open hand)',
+        'win': 'victory pose: her right fist wrapped tightly around the thin handle of ONE black kanabo club resting on her right shoulder (the handle clearly passing through the closed fist, the club does not grow out of the hand), left fist raised high, big grin',
+    },
+    'arlong': {
+        'idle': 'in a ready stance holding his ONE giant saw sword Kiribachi (black blade with white shark-tooth notches along one edge, red wrapped handle) upright in his right hand, grinning with all his shark teeth',
+        'attack': 'swinging his ONE giant saw sword Kiribachi (black blade with white shark-tooth notches along one edge, red wrapped handle) in a wide horizontal slash to the right, BOTH hands together gripping the red handle, the blade stretched far out in front of him at chest height; exactly two arms and two hands, both on the handle',
+        'kick': 'deep lunge to the right thrusting his ONE giant saw sword Kiribachi (black blade with white shark-tooth notches along one edge, red wrapped handle) straight forward with both hands on the red handle, the blade pointing forward',
+        'upper': 'leaping with a rising slash, his ONE giant saw sword Kiribachi (black blade with white shark-tooth notches along one edge, red wrapped handle) swung straight up above his head with both hands on the red handle, both feet off the ground',
+        'special': 'Shark Darts: his whole body flying horizontally to the right like a torpedo, side view, his long saw nose pointing forward, both arms pressed back along his body, empty hands; there is no sword, no blade and no weapon anywhere in this picture (his saw nose is the only pointed thing)',
+        'super': 'Shark Tooth Drill: leaning far forward with his mouth wide open showing rows of sharp shark teeth, both hands clawed forward, empty hands, no sword and no blade anywhere in this picture',
+        'hurt': 'flinching from a hit, upper body bent back, eyes squeezed shut, BOTH hands together gripping the red handle of his ONE giant saw sword Kiribachi (black blade with white shark-tooth notches along one edge, red wrapped handle) held in front of him; exactly two arms and two hands, both on the handle, no open hands',
+        'block': 'blocking by holding his ONE giant saw sword Kiribachi (black blade with white shark-tooth notches along one edge, red wrapped handle) horizontally in front of his body with both hands',
+        'win': 'victory pose: his right fist wrapped tightly around the red handle of his ONE giant saw sword Kiribachi (black blade with white shark-tooth notches along one edge, red wrapped handle) resting on his shoulder (the red handle clearly passing through the closed fist, the blade does not grow out of the hand), his left fist raised, grinning with shark teeth',
+        'ko': 'knocked out lying flat on his back on the ground, side view, dizzy swirly eyes, both arms limp on the ground at his sides with open empty hands, his ONE saw sword lying on the ground next to him (not held); exactly two arms and two hands',
+    },
+    'kuma': {
+        'idle': 'standing in a calm upright stance, holding the small purple book in his left hand, right hand lowered with the palm open',
+        'attack': 'seen from the side facing right: his far arm stretches straight forward to the right from his far shoulder, open palm showing the pink paw pad; his near arm hangs straight down at his side holding the small purple book; exactly two arms and two hands in total, each hand at the end of its own arm, both attached at the shoulders, nothing in front of his chest',
+        'special': 'Pad Cannon: thrusting his open right palm straight forward to the right, a paw-shaped air bubble leaving the pink paw pad, small purple book in his left hand',
+        'super': 'Ursa Shock: holding a huge translucent paw-shaped air bubble between his two outstretched open palms in front of his chest, no book',
+        'block': 'blocking by raising his open right palm in front of his face showing the pink paw pad, small purple book in his left hand',
+    },
+    'enel': {
+        'idle': 'in an arrogant relaxed stance holding his ONE golden staff upright in his right hand, the four drums on the golden ring behind his back',
+        'special': 'Hino: pointing his ONE golden staff forward to the right with a burst of blue-white lightning at its tip, the ONE round golden ring with four small drums still behind his back exactly like in the reference',
+        'ko': 'knocked out lying flat on his back on the ground, side view, body stretched out horizontally, dizzy swirly eyes, his golden staff lying beside him, the golden ring with four drums under his back',
+        'super': 'Amaru: arms spread wide, his whole body crackling with blue-white lightning, the four drums on the golden ring behind him glowing, his ONE golden staff in his right hand',
+    },
     'brook': {
         'windup': 'seen from the side facing right, raising his ONE thin straight silver cane sword high above and behind his head, body coiled and leaning back, about to swing it down; the whole figure and weapon fully inside the frame with a wide empty margin on every side',
         'attack': 'seen from the side facing right, leaning forward right after a powerful downward swing: his ONE thin straight silver cane sword swung down in front of him with its tip low near the floor in front of his feet, never above his head; the whole figure and weapon fully inside the frame with a wide empty margin on every side',
@@ -189,6 +264,9 @@ import os
 # the owner's reference images (not in the repo); override with RUMBLE_REFS
 USER_REF_DIR = os.environ.get('RUMBLE_REFS', os.path.join(os.path.expanduser('~'), 'Desktop', 'Scratchpad', 'Rumble Arena')).replace(os.sep, '/')
 USER_REFS = {
+    'buggy': 'Character/buggy.jpg', 'yamato': 'Character/yamato.webp', 'arlong': 'Character/arlong.webp', 'kuma': 'Character/kuma.jpg', 'enel': 'Character/enel.jpg', 'sabo': 'Character/sabo.jpg',
+    'marco': os.path.join(os.path.dirname(os.path.abspath(__file__)), 'out', 'refs', 'marco_crop.png'),   # emoji panel cropped off
+    'smoker': os.path.join(os.path.dirname(os.path.abspath(__file__)), 'out', 'refs', 'smoker_crop.png'),
     'imu': 'imu.jpg',
     'luffy_g5': 'gear 5.png',
     'chopper_mp': 'monster point.jpg',
@@ -225,6 +303,27 @@ STAGES = {
 # mode 'cut' = rendered on pure white and cut out (solid objects)
 FX_STYLE = 'anime game effect art, vivid colors, clean shapes, highly detailed, centered, nothing else in the image'
 FX_ASSETS = {
+    'buggycannon': ('cut', 1024, 512, 'a gigantic thick black iron pirate cannon barrel lying low and horizontal, perfectly side view, pointing straight to the right, a huge round open muzzle at the right end, the barrel fills almost the whole height of the image, two small wooden wheels under the barrel at the bottom, a red and white clown pattern band around the barrel, plain pure white background, the whole object fully inside the frame with a wide empty margin on every side, nothing cut off'),
+    'sharktooth':  ('cut', 1024, 512, 'one big sharp white triangular shark tooth flying to the right point first, with short speed lines behind it, side view, plain pure white background, the whole object fully inside the frame with a wide empty margin on every side, nothing cut off'),
+    # ---- new fighters (Buggy, Smoker, Marco, Sabo, Yamato, Arlong, Kuma, Enel)
+    'buggyhand':   ('cut', 1024, 512, 'a flying cartoon white-gloved hand with a red cuff holding three small silver throwing knives fanned between its fingers, flying to the right, short speed lines behind it, plain pure white background, the whole effect fully inside the frame with a wide empty margin on every side, nothing cut off'),
+    'buggysaw':    ('cut', 768, 768, 'a spinning cartoon buzzsaw wheel made of two legs in puffy red and brown striped pants and brown boots with sharp knife blades sticking out of the boot tips, motion blur swirl, side view, plain pure white background, the whole effect fully inside the frame with a wide empty margin on every side, nothing cut off'),
+    'buggyfest':   ('cut', 1024, 1024, 'a whirlwind of many floating cartoon clown pirate body pieces (white gloved hands, brown boots, red striped pant legs, a big round red clown nose) swirling in a ring with small silver throwing knives and colorful confetti, plain pure white background, the whole effect fully inside the frame with a wide empty margin on every side, nothing cut off'),
+    'buggyball':   ('cut', 768, 768, 'a big round red cannonball with a white skull and crossbones painted on it and a short lit fuse sparking on top, plain pure white background, the whole effect fully inside the frame with a wide empty margin on every side, nothing cut off'),
+    'smokefist':   ('add', 1024, 640, 'a giant fist made of thick billowing white smoke punching to the right, a long white smoke trail behind it, side view, on a pure black background, the whole effect fully inside the frame with a wide empty margin on every side, nothing cut off'),
+    'smoketrap':   ('add', 768, 1024, 'a towering swirling vertical column of thick white smoke spiraling upward like a cage, on a pure black background, the whole effect fully inside the frame with a wide empty margin on every side, nothing cut off'),
+    'bluebird':    ('add', 1024, 640, 'a swirling ball of blue and yellow phoenix flame shaped like a small bird with spread wings, flying to the right, flame trail behind it, on a pure black background, the whole effect fully inside the frame with a wide empty margin on every side, nothing cut off'),
+    'bluephoenix': ('add', 1024, 768, 'a majestic phoenix made of bright blue flames with yellow flame tips, huge wings spread, long flaming tail, diving to the right with its talons forward, side view, on a pure black background, the whole effect fully inside the frame with a wide empty margin on every side, nothing cut off'),
+    'firedragon':  ('add', 1024, 768, 'a fierce eastern dragon made entirely of roaring orange and red fire with open jaws and claws forward, flying to the right, side view, on a pure black background, the whole effect fully inside the frame with a wide empty margin on every side, nothing cut off'),
+    'dragonbreath':('add', 768, 1024, 'a ground shockwave eruption: cracked rocks and a dome of orange and white energy bursting upward from the ground, debris flying, on a pure black background, the whole effect fully inside the frame with a wide empty margin on every side, nothing cut off'),
+    'icebreath':   ('add', 1024, 384, 'a long horizontal blast of freezing breath, swirling white and cyan frost with sharp ice shards, shooting to the right, on a pure black background, the whole effect fully inside the frame with a wide empty margin on every side, nothing cut off'),
+    'baguabolt':   ('add', 512, 1024, 'a massive vertical strike of crackling black and white lightning with red sparks crashing down onto the ground, shockwave at the bottom, on a pure black background, the whole effect fully inside the frame with a wide empty margin on every side, nothing cut off'),
+    'pawcannon':   ('add', 768, 768, 'a glowing translucent pale blue shockwave bubble shaped exactly like a bear paw print (one big pad and four round toe pads), shockwave rings around it, flying to the right, on a pure black background, the whole effect fully inside the frame with a wide empty margin on every side, nothing cut off'),
+    'ursashock':   ('add', 1024, 1024, 'a gigantic glowing compressed air bubble shaped exactly like a bear paw print (one big pad and four round toe pads), pale blue and white, crackling with energy, on a pure black background, the whole effect fully inside the frame with a wide empty margin on every side, nothing cut off'),
+    'thunderbird': ('add', 1024, 768, 'a giant eagle made of crackling bright blue and white lightning, wings spread wide, flying to the right, side view, on a pure black background, the whole effect fully inside the frame with a wide empty margin on every side, nothing cut off'),
+    'elthor':      ('add', 512, 1024, 'a gigantic wide column of blue-white lightning crashing straight down from a dark storm cloud at the top to the ground, branching bolts, on a pure black background, the whole effect fully inside the frame with a wide empty margin on every side, nothing cut off'),
+    'amaru':       ('add', 1024, 1024, 'a giant muscular thunder god made of crackling blue-white lightning, raising both fists, a ring of four drums floating behind his back, Raijin, on a pure black background, the whole effect fully inside the frame with a wide empty margin on every side, nothing cut off'),
+    'raigo':       ('add', 1024, 1024, 'a gigantic dark swirling thundercloud sphere crackling with blue lightning bolts all around it, on a pure black background, the whole effect fully inside the frame with a wide empty margin on every side, nothing cut off'),
     # Imu (First Twenty Weapons / Omen): black flames, so cut from white instead of additive on black
     'omenorb':     ('cut', 768, 768, 'a sentient fireball of pitch black flames with a glowing crimson red outline and one big glaring red eye in its center, flying to the right, black flames trailing behind it to the left, plain pure white background'),
     'stigma':      ('cut', 512, 1024, 'a huge ancient black spear wreathed in pitch black flames with glowing crimson edges, pointing straight down like it is falling from the sky, ornate black and gold cross guard at the top, plain pure white background'),
@@ -273,6 +372,8 @@ FX_ASSETS = {
 
 # How each effect image is oriented: mirror at cut time, base direction, or always upright
 FX_META = {
+    'smoketrap': {'upright': True}, 'baguabolt': {'upright': True}, 'elthor': {'upright': True}, 'amaru': {'upright': True}, 'dragonbreath': {'upright': True},
+    'buggysaw': {'upright': True}, 'buggyfest': {'upright': True}, 'raigo': {'upright': True}, 'pawcannon': {'upright': True}, 'ursashock': {'upright': True},
     'stigma': {'upright': True},
     'slash_blue': {'mirror': True}, 'slash_green': {'mirror': True}, 'slash_ice': {'mirror': True}, 'slash_haki': {'mirror': True},
     'magmafist': {'rot': -1.5708}, 'cyclone': {'upright': True}, 'sandstorm': {'upright': True}, 'lightning': {'upright': True},

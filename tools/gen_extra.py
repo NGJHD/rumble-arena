@@ -18,6 +18,14 @@ IMU_REAL = ('Imu, the demon god-king of One Piece: dark skin, long wild white ha
 
 # realistic One Piece anime look (adult proportions) for each hero, used only for the ending art
 REAL = {
+    'buggy': 'Buggy the Clown, big round red clown nose, light blue hair, pirate captain hat, long orange fur-trimmed captain coat over his shoulders, striped shirt, light blue pants',
+    'smoker': 'Smoker the Marine, short spiky white hair, two cigars in his mouth, open white jacket with green fur trim over a bare muscular chest, long white Marine coat, dark jeans, boots',
+    'marco': 'Marco the Phoenix, blond pineapple-shaped hair, sleepy eyes, open purple shirt showing a blue Whitebeard cross tattoo on his chest, blue and yellow phoenix flames on his arms',
+    'sabo': 'Sabo, black top hat with goggles, wavy blond hair, burn scar around his left eye, long black coat, white cravat, blue vest, gloves',
+    'yamato': 'Yamato, very long white hair fading to mint green, two red horns, sleeveless white kimono top, long red hakama, big black kanabo club',
+    'arlong': 'Arlong the sawshark fishman, long saw-shaped nose, sharp shark teeth grin, open yellow and black patterned shirt, khaki shorts',
+    'kuma': 'Bartholomew Kuma, a towering giant man with a round body, bear-ear cap, glasses, black coat with a big white crosshair symbol, holding a small bible',
+    'enel': 'Enel the god of Skypiea, very long earlobes, white headwrap, bare muscular chest, a golden ring of four drums behind his back, baggy orange patterned pants, long golden staff',
     'luffy': 'Monkey D. Luffy, straw hat, open red vest, X scar on his chest, blue shorts, sandals, huge grin',
     'luffy_g5': 'Monkey D. Luffy in Gear 5 Sun God form: fluffy wavy WHITE hair, white smoke curls around his neck, glowing red-ringed eyes, huge laughing grin, open WHITE shirt, white baggy pants, purple sash, everything white and glowing (no straw hat, no red or orange or yellow clothes)',
     'zoro': 'Roronoa Zoro, green hair, scar over his left eye, dark green kimono with a red sash, three katanas, one katana held in his mouth',
@@ -85,9 +93,19 @@ VREF = {'ace': 'ace.jpeg', 'akainu': 'akainu.webp', 'bigmom': 'big mom 2.jpg', '
         'garp': 'garp.png', 'jinbe': 'jinbe.webp', 'kaido': 'kaido.webp', 'kizaru': 'kizaru 3.jpg', 'aokiji': 'kuzan.webp', 'law': 'law.webp',
         'luffy': 'luffy.png', 'mihawk': 'mihawk.png', 'nami': 'nami.jpg', 'robin': 'robin.jpg', 'sanji': 'sanji.webp', 'shanks': 'shanks.jpg',
         'usopp': 'usopp.jpg', 'whitebeard': 'whitebeard.webp', 'zoro': 'zoro 2.jpg',
-        'luffy_g5': 'luffy g5.jpg'}
+        'luffy_g5': 'luffy g5.jpg',
+        'buggy': 'buggy.webp', 'smoker': 'smoker.jpg', 'marco': 'marco.jpg', 'sabo': 'sabo c.jpg', 'yamato': 'yamato.jpg',
+        'arlong': 'arlong.webp', 'kuma': 'kuma.webp', 'enel': 'enel.webp'}
 
 NOTES = {
+    'buggy': 'Buggy has a big round shiny RED clown nose and his arms are crossed; no knives, no weapon.',
+    'smoker': 'Smoker carries his long jitte on his back: only the top end of the plain silver rod sticks up behind his shoulder; his hands are empty fists. Two cigars in his mouth.',
+    'marco': 'Marco has blue and yellow phoenix flames burning on both forearms; no weapon.',
+    'sabo': 'Sabo reaches one gloved hand forward like a dragon claw; his metal pipe is NOT in his hands.',
+    'yamato': 'Yamato holds ONE black kanabo club over the shoulder by its handle (a single-ended black iron club with a metal ring at the handle end); no other weapon.',
+    'arlong': 'Arlong has his arms crossed and holds no sword and no weapon.',
+    'kuma': 'Kuma holds a small purple book in one hand; no weapon. He is much taller and wider than a normal man.',
+    'enel': 'Enel holds ONE long thin golden staff upright beside him; the golden ring with FOUR small drums floats behind his back.',
     'bigmom': 'Big Mom is a HUGE woman, much taller and wider than a normal person, with curly pink hair, a black pirate captain hat and a pink dress with white polka dots; beside her float Prometheus (a living sun with a face) and Zeus (a white thundercloud with a face).',
     'crocodile': 'Prosthetic hook: his LEFT forearm ends in a large golden hook fused to the end of his sleeve where his left hand would be (the hook IS his left hand, it is NOT held by anything). His left arm hangs at his side showing the hook; his right hand is a bare fist. No sword, no cane, no staff.',
     'hancock': 'Boa Hancock: her WHOLE head is fully visible with a clear forehead and straight black bangs, very long straight black hair, a long red dress with green and pink circle patterns and a high slit, a purple cape, exactly as in image 1. Beautiful proud expression looking down, one hand on her hip. Keep her entire figure, head to toes, inside the frame. Her black hair must stand out against a bright red sky: the black sun is far off to the side, NOT behind her head.',

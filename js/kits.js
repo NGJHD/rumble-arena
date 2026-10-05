@@ -177,7 +177,7 @@ const KITS = {
     speed: 3, power: 1.3,
     L1: { reach: 1.5, fx: [ARC.purple] }, L2: { reach: 1.5, fx: [ARC.purple] }, L3: { reach: 1.5, fx: [ARC.purple, 'quake'] },
     M1: { reach: 1.6, fx: [ARC.purple, 'lightning'] }, M2: { reach: 1.7, fx: [ARC.purple, 'quake'] },
-    H1: { pose: 'special', reach: 1.8, fx: ['lightning', 'quake'], elem: 'lightning', call: 'Thunder Bagua' },
+    H1: { pose: 'special', reach: 1.8, fx: ['lightning', 'quake'], elem: 'lightning', call: 'Ragnaraku' },
     L4: { fx: ['lightning'], call: 'Destruction Wind' }, A4: { fx: ['lightning', 'quake'] },
   },
   imu: {
@@ -216,6 +216,59 @@ const KITS = {
     M1: { fx: ['haki'] }, M2: { pose: 'kick', fx: ['haki'] },
     H1: { pose: 'special', reach: 1.3, fx: ['haki', 'quake'] },
     L4: { fx: ['haki'] }, A4: { fx: ['haki', 'quake'] },
+  },
+  buggy: {
+    L1: { fx: [ARC.white] }, L2: { fx: [ARC.white] }, L3: { pose: 'kick' },
+    M1: { fx: [ARC.white, 'slash'] }, M2: { pose: 'kick', hits: 2, hitEvery: 5, fx: [ARC.white] },
+    H1: { pose: 'kick', proj: { art: 'buggyball', artK: 1.7, sprite: 'cannonball', elem: 'fire', speed: 12, r: 20, dmg: 70 }, call: 'Muggy Ball' },
+    L4: { fx: [ARC.white] }, A4: { fx: [ARC.white, 'slash'] },
+  },
+  smoker: {
+    L1: { fx: [ARC.white] }, L2: { fx: [ARC.white] }, L3: { reach: 1.3, fx: [ARC.white] },
+    M1: { reach: 1.3, fx: [ARC.white, 'smoke'] }, M2: { hits: 3, hitEvery: 4, fx: ['smoke'] },
+    H1: { pose: 'special', remote: 260, fx: ['smoke', 'smoke'], elem: 'smoke', call: 'White Snake' },
+    L4: { fx: ['smoke'], call: 'White Vine' }, A4: { fx: ['smoke'] },
+  },
+  marco: {
+    speed: -1,
+    L1: { fx: ['bluefire'] }, L2: { fx: ['bluefire'] }, L3: { fx: ['bluefire'] },
+    M1: { fx: ['bluefire'] }, M2: { hits: 2, hitEvery: 5, fx: ['bluefire'] },
+    H1: { reach: 1.3, fx: ['bluefire', 'bluefire'], elem: 'bluefire' },
+    L4: { fx: ['bluefire'] }, A4: { fx: ['bluefire'] },
+  },
+  sabo: {
+    L1: { fx: [ARC.gold] }, L2: { fx: [ARC.gold] }, L3: { reach: 1.3, fx: [ARC.gold] },
+    M1: { pose: 'special', fx: ['haki'] }, M2: { hits: 3, hitEvery: 4, fx: [ARC.gold] },
+    H1: { pose: 'special', reach: 1.3, fx: ['fire', 'haki'], elem: 'fire' },
+    L4: { fx: ['fire'] }, A4: { fx: ['fire', 'quake'] },
+  },
+  yamato: {
+    speed: 1, power: 1.05,
+    L1: { reach: 1.3, fx: [ARC.ice] }, L2: { reach: 1.3, fx: [ARC.ice] }, L3: { reach: 1.3, fx: [ARC.ice] },
+    M1: { reach: 1.4, fx: [ARC.ice, 'ice'] }, M2: { reach: 1.4, fx: [ARC.ice] },
+    H1: { reach: 1.5, fx: ['ice', 'quake'], elem: 'ice', call: 'Mahoroba' },
+    L4: { fx: ['ice'] }, A4: { fx: ['ice', 'quake'] },
+  },
+  arlong: {
+    speed: 1, power: 1.1,
+    L1: { reach: 1.4, fx: [ARC.white] }, L2: { reach: 1.4, fx: [ARC.white] }, L3: { reach: 1.4, fx: [ARC.white] },
+    M1: { reach: 1.5, fx: [ARC.white, 'slash'] }, M2: { reach: 1.5, hits: 2, hitEvery: 5, fx: [ARC.white] },
+    H1: { reach: 1.6, fx: ['water', 'slash'], elem: 'water' },
+    L4: { fx: ['water'] }, A4: { fx: ['water', 'quake'] },
+  },
+  kuma: {
+    speed: 2, power: 1.2,
+    L1: { fx: ['paw'] }, L2: { fx: ['paw'] }, L3: { pose: 'kick', fx: ['paw'] },
+    M1: { pose: 'special', proj: { art: 'pawcannon', artK: 2.2, sprite: 'orb', elem: 'paw', speed: 14, r: 18, dmg: 45 } },
+    M2: { pose: 'kick', fx: ['paw'] },
+    H1: { pose: 'special', reach: 1.3, fx: ['paw', 'quake'], elem: 'paw' },
+    L4: { fx: ['paw'] }, A4: { fx: ['paw', 'quake'] },
+  },
+  enel: {
+    L1: { fx: [ARC.gold] }, L2: { fx: [ARC.gold] }, L3: { reach: 1.4, fx: [ARC.gold] },
+    M1: { reach: 1.4, fx: [ARC.gold, 'lightning'] }, M2: { hits: 3, hitEvery: 4, fx: ['lightning'] },
+    H1: { pose: 'special', remote: 240, fx: ['lightning', 'lightning'], elem: 'lightning', call: 'Kari' },
+    L4: { fx: ['lightning'] }, A4: { fx: ['lightning'] },
   },
 };
 

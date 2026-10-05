@@ -2,7 +2,6 @@
 // Roster. `look` drives the chibi renderer (draw.js); `style` picks normal-attack poses;
 // s1/s2/su are the G/H/J moves (templates built in moves.js).
 const ROSTER = [
-  // ---------------- Straw Hat Pirates ----------------
   {
     id: 'luffy', name: 'LUFFY', full: 'Monkey D. Luffy', group: 0, style: 'punch', elem: 'rubber',
     quote: "I'm gonna be King of the Pirates!",
@@ -83,7 +82,6 @@ const ROSTER = [
     s2: { type: 'rush', style: 'drill', name: 'Vagabond Drill', elem: 'water', dmg: 90 },
     su: { type: 'bigproj', name: 'Five Thousand Tile Fist', elem: 'water', sprite: 'wave', art: 'waterfist', artK: 2.8, r: 95, speed: 7, power: 1.3 },
   },
-  // ---------------- Admirals ----------------
   {
     id: 'akainu', name: 'AKAINU', full: 'Akainu', group: 1, style: 'punch', elem: 'magma',
     quote: 'Absolute justice!',
@@ -108,7 +106,22 @@ const ROSTER = [
     s2: { type: 'pillar', name: 'Ice Time', elem: 'ice', art: 'iceberg', dmg: 85 },
     su: { type: 'screen', name: 'Ice Age', elem: 'ice', finalFx: 'freeze', power: 0.85 },
   },
-  // ---------------- Legends ----------------
+  {
+    id: 'garp', name: 'GARP', full: 'Monkey D. Garp', group: 1, style: 'punch', elem: 'haki',
+    quote: 'Fist of LOVE! Bwahahaha!',
+    look: { skin: '#e8b48a', scale: 1.2, build: 'big', hair: { style: 'none', color: '#eee' }, hat: { type: 'doghat' }, eyes: 'normal', mouth: 'grin', extras: ['beardWhite', 'scarEye'], top: { style: 'suit', color: '#f5f5f5', color2: '#1e40af' }, sleeves: 'long', bottom: { style: 'pants', color: '#1e3a8a' }, coat: { type: 'marine', color: '#f5f5f5' }, shoes: '#111' },
+    s1: { type: 'rush', style: 'bigpunch', name: 'Fist of Love', elem: 'haki', dmg: 100 },
+    s2: { type: 'proj', name: 'Fist Bone Meteor', elem: 'punch', sprite: 'cannonball', art: 'cannonball', artK: 2.1, artSpin: 0.3, dmg: 90, speed: 13, r: 30, count: 3 },
+    su: { type: 'galaxy', name: 'Galaxy Impact', elem: 'haki', power: 1.15 },
+  },
+  {
+    id: 'smoker', name: 'SMOKER', full: 'Smoker', group: 1, style: 'sword', elem: 'smoke',
+    quote: "You're not getting away from me!",
+    look: { skin: '#f0c8a0', scale: 1.15, build: 'big', hair: { style: 'spiky', color: '#eceff1' }, eyes: 'sharp', mouth: 'calm', top: { style: 'openshirt', color: '#fafafa' }, sleeves: 'long', bottom: { style: 'pants', color: '#1e3a8a' }, coat: { type: 'fur', color: '#fafafa', color2: '#2e7d32' }, shoes: '#6d4c41', weapon: 'staff' },
+    s1: { type: 'proj', name: 'White Blow', elem: 'smoke', sprite: 'orb', art: 'smokefist', artK: 3, dmg: 80, speed: 11, r: 40 },
+    s2: { type: 'rush', name: 'White Launcher', elem: 'smoke', dmg: 90 },
+    su: { type: 'pillar', name: 'White Out', elem: 'smoke', art: 'smoketrap' },
+  },
   {
     id: 'ace', name: 'ACE', full: 'Portgas D. Ace', group: 2, style: 'punch', elem: 'fire',
     quote: 'Thanks for fighting me. That was fun!',
@@ -198,18 +211,70 @@ const ROSTER = [
     su: { type: 'mellow', name: 'Love-Love Mellow', elem: 'love', finalFx: 'stone' },
   },
   {
-    id: 'garp', name: 'GARP', full: 'Monkey D. Garp', group: 2, style: 'punch', elem: 'haki',
-    quote: 'Fist of LOVE! Bwahahaha!',
-    look: { skin: '#e8b48a', scale: 1.2, build: 'big', hair: { style: 'none', color: '#eee' }, hat: { type: 'doghat' }, eyes: 'normal', mouth: 'grin', extras: ['beardWhite', 'scarEye'], top: { style: 'suit', color: '#f5f5f5', color2: '#1e40af' }, sleeves: 'long', bottom: { style: 'pants', color: '#1e3a8a' }, coat: { type: 'marine', color: '#f5f5f5' }, shoes: '#111' },
-    s1: { type: 'rush', style: 'bigpunch', name: 'Fist of Love', elem: 'haki', dmg: 100 },
-    s2: { type: 'proj', name: 'Fist Bone Meteor', elem: 'punch', sprite: 'cannonball', art: 'cannonball', artK: 2.1, artSpin: 0.3, dmg: 90, speed: 13, r: 30, count: 3 },
-    su: { type: 'galaxy', name: 'Galaxy Impact', elem: 'haki', power: 1.15 },
+    id: 'buggy', name: 'BUGGY', full: 'Buggy the Clown', group: 2, style: 'punch', elem: 'slash',
+    quote: 'Gyahahaha! Bow before the flashy Captain Buggy!',
+    look: { skin: '#f7d2ad', scale: 1.05, hair: { style: 'long', color: '#4fc3f7' }, hat: { type: 'pirate', color: '#fafafa' }, eyes: 'sharp', mouth: 'bigrin', top: { style: 'suit', color: '#fafafa', color2: '#43a047' }, sleeves: 'long', bottom: { style: 'pants', color: '#8d1b1b' }, coat: { type: 'cape', color: '#fafafa', color2: '#cfd8dc' }, shoes: '#6d4c41' },
+    s1: { type: 'proj', name: 'Chop-Chop Cannon', elem: 'slash', sprite: 'orb', art: 'buggyhand', artK: 2.4, dmg: 75, speed: 13, r: 28 },
+    s2: { type: 'wave', name: 'Chop-Chop Rice Cracker', elem: 'slash', art: 'buggysaw', dmg: 85, split: true },
+    su: { type: 'dual', name: 'Chop-Chop Festival', maxName: 'Special Buggy Ball', elem: 'slash',
+      lv1: { type: 'festival', elem: 'slash', power: 0.95 },
+      max: { type: 'cannon', elem: 'fire', art: 'buggyball', artK: 2.3, r: 100, speed: 9, power: 1.2 } },
+  },
+  {
+    id: 'marco', name: 'MARCO', full: 'Marco the Phoenix', group: 2, style: 'kick', elem: 'bluefire',
+    quote: 'The phoenix always rises again, yoi.',
+    look: { skin: '#f2c099', scale: 1.1, hair: { style: 'spiky', color: '#ffd54f' }, eyes: 'tired', mouth: 'calm', top: { style: 'openshirt', color: '#8e24aa' }, sleeves: 'long', sash: '#4fc3f7', bottom: { style: 'pants', color: '#1a237e' }, shoes: '#6d4c41' },
+    s1: { type: 'proj', name: 'Bluebird', elem: 'bluefire', sprite: 'orb', art: 'bluebird', artK: 3, dmg: 75, speed: 12, r: 34 },
+    s2: { type: 'rush', style: 'talon', name: 'Crane Talons', elem: 'bluefire', dmg: 95 },
+    su: { type: 'beastform', name: 'Phoenix Brand', elem: 'bluefire', art: 'bluephoenix', artK: 2.2, power: 1.25 },
+  },
+  {
+    id: 'sabo', name: 'SABO', full: 'Sabo', group: 2, style: 'sword', elem: 'fire',
+    quote: 'Leave this to your big brother!',
+    look: { skin: '#f7d2ad', hair: { style: 'short', color: '#ffd54f' }, hat: { type: 'pirate', color: '#1a1a1a' }, eyes: 'normal', mouth: 'grin', top: { style: 'suit', color: '#1a237e', color2: '#fafafa' }, sleeves: 'long', bottom: { style: 'pants', color: '#90a4ae' }, coat: { type: 'cape', color: '#1a1a1a', color2: '#263238' }, shoes: '#1a1a1a', weapon: 'staff' },
+    s1: { type: 'rush', spritePose: 'special', name: 'Dragon Claw', elem: 'haki', dmg: 95 },
+    s2: { type: 'wave', name: 'Dragon Breath', elem: 'quake', art: 'dragonbreath', dmg: 85 },
+    su: { type: 'bigproj', spritePose: 'super', name: 'Flame Dragon King', elem: 'fire', sprite: 'fireball', art: 'firedragon', artK: 2.4, r: 120, speed: 9, power: 1.25 },
+  },
+  {
+    id: 'yamato', name: 'YAMATO', full: 'Yamato', group: 2, style: 'sword', elem: 'ice',
+    quote: 'I am Kozuki Oden!',
+    look: { skin: '#f7d2ad', scale: 1.15, hair: { style: 'long', color: '#fafafa' }, eyes: 'fem', mouth: 'teeth', extras: ['horns'], top: { style: 'robe', color: '#fafafa', color2: '#b39ddb' }, sleeves: 'none', bottom: { style: 'hakama', color: '#d32f2f' }, shoes: '#8d6e63', weapon: 'club' },
+    s1: { type: 'beam', name: 'Namuji Glacier Fang', elem: 'ice', art: 'icebreath', dmg: 85 },
+    s2: { type: 'upper', name: 'Hallowed Glacier Slash', elem: 'ice', dmg: 90 },
+    su: { type: 'pillar', name: 'Thunder Bagua', elem: 'lightning', art: 'baguabolt', power: 1.15 },
+  },
+  {
+    id: 'arlong', name: 'ARLONG', full: 'Arlong', group: 2, style: 'sword', elem: 'water',
+    quote: 'Shahahaha! Fish-men are the strongest!',
+    look: { skin: '#9fa8ff', scale: 1.3, build: 'big', hair: { style: 'longwild', color: '#1a1a1a' }, hat: { type: 'furhat' }, eyes: 'sharp', mouth: 'teeth', top: { style: 'openshirt', color: '#fbc02d' }, sleeves: 'short', sash: '#9e9e9e', bottom: { style: 'pants', color: '#5d4037' }, shoes: '#6d4c41', weapon: 'katana' },
+    s1: { type: 'rush', spritePose: 'special', name: 'Shark Darts', elem: 'water', dmg: 95 },
+    s2: { type: 'proj', spritePose: 'super', name: 'Tooth Attack', elem: 'slash', sprite: 'orb', art: 'sharktooth', artK: 2.6, dmg: 80, speed: 15, r: 24 },
+    su: { type: 'drill', name: 'Shark Tooth Drill', elem: 'water', power: 1.15 },
+  },
+  {
+    id: 'kuma', name: 'KUMA', full: 'Bartholomew Kuma', group: 2, style: 'punch', elem: 'paw',
+    quote: 'If you could take a trip, where would you go?',
+    look: { skin: '#e8c4a0', scale: 1.5, build: 'fat', hair: { style: 'curlylong', color: '#1a1a1a' }, hat: { type: 'doghat' }, eyes: 'shades', shadeColor: '#cfd8dc', mouth: 'calm', top: { style: 'suit', color: '#1a1a1a', color2: '#fafafa' }, sleeves: 'long', bottom: { style: 'pants', color: '#bdbdbd' }, shoes: '#6d4c41' },
+    s1: { type: 'proj', name: 'Pad Cannon', elem: 'paw', sprite: 'orb', art: 'pawcannon', artK: 2.6, dmg: 80, speed: 14, r: 36 },
+    s2: { type: 'teleport', spritePose: 'special', name: 'Paw Travel', elem: 'paw', dmg: 80 },
+    su: { type: 'ursa', name: 'Ursa Shock', elem: 'paw', power: 1.2 },
+  },
+  {
+    id: 'enel', name: 'ENEL', full: 'Enel', group: 2, style: 'sword', elem: 'lightning',
+    quote: 'Yahahaha! I am God!',
+    look: { skin: '#f2c099', scale: 1.15, hair: { style: 'short', color: '#ffd54f' }, eyes: 'tired', mouth: 'calm', top: { style: 'shirtless' }, sleeves: 'none', sash: '#1e63c4', bottom: { style: 'pants', color: '#ff9800' }, shoes: '#f2c099', weapon: 'staff' },
+    s1: { type: 'beam', name: 'Vari', elem: 'lightning', bolt: true, dmg: 80 },
+    s2: { type: 'pillar', name: 'El Thor', elem: 'lightning', art: 'elthor', dmg: 90 },
+    su: { type: 'dual', name: '200 Million Volt Amaru', maxName: 'Raigo', elem: 'lightning',
+      lv1: { type: 'pillar', elem: 'lightning', art: 'amaru', power: 1.1 },
+      max: { type: 'screen', elem: 'lightning', art: 'raigo', power: 1.0 } },
   },
 ];
 const GROUPS = [
   { name: 'STRAW HATS', color: '#d32f2f' },
-  { name: 'ADMIRALS', color: '#1e63c4' },
-  { name: 'LEGENDS', color: '#7b1fa2' },
+  { name: 'MARINES', color: '#1e63c4' },
+  { name: 'OTHERS', color: '#7b1fa2' },
 ];
 
 // arcade final boss (not selectable)

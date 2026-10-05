@@ -3,6 +3,15 @@
 // Hooks: d.onFrame(f, fr, g, a) per frame, d.onHit(att, def, res, g) after a melee hit lands.
 
 const SPECIAL_STYLES = {
+  // Marco Crane Talons: a flying talon kick, white claw swooshes in front of his foot
+  talon(d, spec) {
+    Object.assign(d, { spritePose: 'kick' });
+    const base = d.onFrame;
+    d.onFrame = (f, fr, g, a) => {
+      base(f, fr, g, a);
+      if (fr > 9 && fr <= a.activeEnd && fr % 3 === 0) for (const k of [0, 1]) FX.arc(f.x + f.facing * (40 + k * 34) * f.hs, f.y - f.height * 0.5, f.height * 0.5, f.facing, '#ffffff');
+    };
+  },
   // Zoro Oni Giri / Brook Hanauta Sancho: dash straight through, the cut lands a beat later
   through(d, spec) {
     Object.assign(d, { startup: 8, active: 12, recovery: 18, hits: 1, stopOnHit: false, passThrough: true, box: { x: -20, y: -140, w: 90, h: 130 } });

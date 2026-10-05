@@ -87,7 +87,7 @@ const Sound = {
     }
   },
   elem(e) {
-    const m = { fire: 'fire', magma: 'fire', ice: 'ice', light: 'light', laser: 'light', lightning: 'lightning', slash: 'slash', quake: 'quake', dark: 'dark', haki: 'dark', water: 'whoosh', sand: 'whoosh', string: 'slash', love: 'light', soul: 'ice', room: 'light' };
+    const m = { fire: 'fire', magma: 'fire', ice: 'ice', light: 'light', laser: 'light', lightning: 'lightning', slash: 'slash', quake: 'quake', dark: 'dark', haki: 'dark', water: 'whoosh', sand: 'whoosh', string: 'slash', love: 'light', soul: 'ice', room: 'light', smoke: 'whoosh', bluefire: 'fire', paw: 'quake' };
     this.play(m[e] || 'whoosh');
   },
 

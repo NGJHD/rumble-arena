@@ -127,6 +127,7 @@ class Fighter {
     if (this.invuln > 0) this.invuln--;
     if (this.flash > 0) this.flash--;
     if (this.maxLook > 0) this.maxLook--;
+    if (this.split && --this.split.t <= 0) { this.split = null; FX.smoke(this.x, this.y - this.height * 0.4, 10, 'rgba(255,255,255,0.8)'); }
     if (this.cd.s1 > 0) this.cd.s1--;
     if (this.cd.s2 > 0) this.cd.s2--;
     if (this.comboShow > 0) this.comboShow--;
@@ -208,7 +209,7 @@ class Fighter {
     this.faceOpp();
     if (this.buffer && this.tryStart(this.buffer.b, g)) return;
     if (!g.controlsLive) { this.vx = 0; this.setState('idle'); return; }
-    if (inp.held.up) { this.jump(this.fwdHeld() ? 1 : this.backHeld() ? -1 : 0); return; }
+    if (inp.held.up && !this.split) { this.jump(this.fwdHeld() ? 1 : this.backHeld() ? -1 : 0); return; }
     if (this.dashReq) {
       this.dashDir = this.dashReq; this.dashReq = 0; this.setState('dash');
       this.trail = 16; Sound.play('dash'); FX.dust(this.x, GROUND_Y, 4); return;
@@ -578,6 +579,7 @@ class Fighter {
     if (d.jitter && f > d.startup && f <= a.activeEnd) { fr.dx = rand(-6, 6); fr.dy = rand(-3, 3); }
     if (d.spinSprite && f > d.startup && f <= a.activeEnd) { fr.rot = (f * d.spinSprite) % TAU; fr.center = true; }
     if (d.tilt && f > d.startup && f <= a.activeEnd) fr.rot = d.tilt;
+    if (d.roll && f > d.startup && f <= a.activeEnd) { const c = Math.cos(f * 0.7); fr.sy *= Math.sign(c || 1) * Math.max(0.12, Math.abs(c)); fr.center = true; fr.midScale = true; }   // continuous vertical flip around his own forward axis (drill spin)
     fr.center = this.airborne;
     if (d.isNormal && f > a.activeEnd + d.recovery * 0.6) fr.pose = 'idle';
     if (d.isSuper && f <= d.startup) fr.sx = 1 + Math.sin(f) * 0.03;
@@ -615,6 +617,7 @@ class Fighter {
       ctx.globalAlpha = 1;
     }
     const fr = this.drawnFrame();
+    if (this.state === 'attack' && this.atk && this.atk.data.drawUnder) this.atk.data.drawUnder(this, ctx, this.atk);   // props behind the fighter (Buggy's cannon)
     // Zoro's Asura ghosts
     if (this.clones > 0 && FXImg.get('asura')) {
       const pulse = 1 + Math.sin(this.animT * 0.25) * 0.03;
@@ -627,7 +630,18 @@ class Fighter {
     let filter = this.flash > 0 ? 'brightness(2.5)' : null;
     if (this.stoned > 0) filter = 'grayscale(1) brightness(0.85) contrast(1.3)';
     if (this.giantK > 1.05 && !Sprites.has(this.form)) filter = (filter ? filter + ' ' : '') + 'brightness(0.85) saturate(1.3)';
-    this.drawSpriteFrame(ctx, this.x, this.y, this.facing, fr, filter);
+    if (this.split) {
+      // Chop-Chop Fruit: only the part still attached is drawn (legs gone: cut at the waist; festival: head only, bobbing)
+      ctx.save(); ctx.beginPath();
+      const s = Sprites.get(this.spriteId, fr.pose);
+      if (this.split.mode === 'head' && s && s.m.head) {
+        const k = this.spriteH / s.idle.srcH, dh = s.m.srcH * k, dw = dh * s.img.width / s.img.height, [hx, hy, hr] = s.m.head;
+        const cx = this.x + ((fr.dx || 0) + (hx - s.m.ax) * dw * (fr.sx || 1)) * this.facing, cy = this.y + (fr.dy || 0) - (1 - hy) * dh * (fr.sy || 1);
+        ctx.ellipse(cx, cy, hr * dw * 0.5, hr * dw * 0.46, 0, 0, TAU);
+      } else ctx.rect(this.x - 400, this.y - this.spriteH * 0.4 - 600, 800, 600);
+      ctx.clip(); this.drawSpriteFrame(ctx, this.x, this.y, this.facing, fr, filter);
+      ctx.restore();
+    } else this.drawSpriteFrame(ctx, this.x, this.y, this.facing, fr, filter);
     if (this.iced > 0) this.drawIce(ctx);
     // Bajrang Gun charge: the punching fist itself swells into the giant white fist
     if (this.chargeFist) {

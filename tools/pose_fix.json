@@ -614,5 +614,90 @@
  },
  "crocodile/attack": {
   "scale": 1.14
+ },
+ "arlong/upper": {
+  "excl": [
+   [
+    0.55,
+    0.36,
+    1,
+    0.56
+   ]
+  ],
+  "fist": [
+   0.92,
+   0.04,
+   0.06
+  ],
+  "scale": 0.9
+ },
+ "yamato/attack": {
+  "excl": [
+   [
+    0.4,
+    0,
+    0.8,
+    0.24
+   ]
+  ],
+  "fist": [
+   0.94,
+   0.36,
+   0.07
+  ]
+ },
+ "yamato/kick": {
+  "excl": [
+   [
+    0.4,
+    0,
+    0.8,
+    0.24
+   ]
+  ],
+  "fist": [
+   0.95,
+   0.33,
+   0.07
+  ]
+ },
+ "yamato/special": {
+  "excl": [
+   [
+    0.4,
+    0,
+    0.8,
+    0.24
+   ]
+  ]
+ },
+ "arlong/attack": {
+  "excl": [
+   [
+    0.58,
+    0.32,
+    1,
+    0.48
+   ]
+  ]
+ },
+ "yamato/upper": {
+  "fist": [
+   0.9,
+   0.05,
+   0.07
+  ]
+ },
+ "marco/upper": {
+  "scale": 0.9
+ },
+ "kuma/upper": {
+  "scale": 0.88
+ },
+ "sabo/jump": {
+  "scale": 1.08
+ },
+ "sabo/block": {
+  "scale": 1.06
  }
 }

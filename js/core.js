@@ -36,6 +36,9 @@ const ELEM = {
   laser: ['#ffffff', '#80d8ff', '#00b0ff'],
   room: ['#e0f7fa', '#80deea', '#00acc1'],
   metal: ['#ffffff', '#cfd8dc', '#ffd54f'],
+  smoke: ['#ffffff', '#eceff1', '#90a4ae'],
+  bluefire: ['#fff59d', '#40c4ff', '#2962ff'],
+  paw: ['#ffffff', '#e1f5fe', '#f48fb1'],
 };
 const ec = (e, i) => (ELEM[e] || ELEM.punch)[i];
 
