@@ -5,6 +5,16 @@ ELEM.bluefire = ['#e1f5fe', '#40c4ff', '#1565c0'];
 ELEM.twister = ['#e1f5fe', '#7e57c2', '#283593'];
 
 const SUPER_TYPES = {
+  // Smoker White Out: smoke floods the whole screen, then the trapping smoke column rises on the enemy
+  whiteout(spec, ch, X) {
+    const d = buildSuper(Object.assign({}, spec, { type: 'pillar' }), ch, X.lvl);
+    const spawn = d.spawn;
+    return Object.assign(d, {
+      startup: 34, spawnAt: 34,
+      onFrame(f, fr, g) { if (fr === 1) { g.addEnt(new SmokeScreen({ owner: f, life: 34 + 80, hits: 0 })); Sound.play('whoosh'); } },
+      spawn,
+    });
+  },
   // Buggy Chop-Chop Festival: only his head stays; hands with knives and his spinning legs dart in and out through the enemy
   festival(spec, ch, X) {
     return Object.assign(X.base, {
@@ -623,5 +633,27 @@ class BuggyParts extends Ent {
       if (!drawArt(ctx, p[0], q.x, q.y, p[3], { flip: dx < 0, rot: p[0] === 'buggysaw' ? this.t * 0.4 : 0 })) { ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(q.x, q.y, 20, 0, TAU); ctx.fill(); }
       if (this.t % 3 === 0) FX.burst(q.x, q.y, 'slash', 1, 2, 6, 14);
     }
+  }
+}
+
+// Translucent smoke over the whole screen (no hits of its own)
+class SmokeScreen extends Ent {
+  constructor(o) {
+    super(o); this.max = this.life;
+    this.puffs = Array.from({ length: 40 }, () => ({ x: rand(-60, W + 60), y: rand(40, H), r: rand(150, 300), vx: rand(-0.8, 0.8), ph: rand(0, TAU) }));
+  }
+  rect() { return null; }
+  draw(ctx) {
+    // thins out a little once the smoke column rises (at frame 34) so the column stands out
+    const camX = Game.fight.camX, k = Math.min(1, this.t / 20, this.life / 20) * (this.t > 34 ? lerp(1, 0.6, Math.min(1, (this.t - 34) / 10)) : 1);
+    ctx.save();
+    ctx.globalAlpha = 0.62 * k; ctx.fillStyle = '#e8edf1'; ctx.fillRect(camX - 50, -50, W + 100, H + 100);
+    for (const p of this.puffs) {
+      const x = camX + p.x + p.vx * this.t, y = p.y + Math.sin(this.t * 0.04 + p.ph) * 12, r = p.r * (0.9 + 0.1 * Math.sin(this.t * 0.05 + p.ph));
+      const gr = ctx.createRadialGradient(x, y, 0, x, y, r);
+      gr.addColorStop(0, 'rgba(255,255,255,0.85)'); gr.addColorStop(0.6, 'rgba(240,244,247,0.5)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.globalAlpha = k; ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(x, y, r, 0, TAU); ctx.fill();
+    }
+    ctx.restore();
   }
 }

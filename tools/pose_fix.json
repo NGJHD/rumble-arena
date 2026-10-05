@@ -699,5 +699,23 @@
  },
  "sabo/block": {
   "scale": 1.06
+ },
+ "kizaru/upper": {
+  "scale": 0.86
+ },
+ "kizaru/ko": {
+  "scale": 0.72
+ },
+ "kizaru/super": {
+  "scale": 0.92
+ },
+ "kizaru/kick": {
+  "scale": 0.94
+ },
+ "kizaru/special": {
+  "scale": 0.95
+ },
+ "kizaru/attack": {
+  "scale": 0.95
  }
 }

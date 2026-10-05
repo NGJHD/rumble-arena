@@ -18,7 +18,7 @@ CHARS = {
     'brook': ("Brook", "Soul King Brook: tall thin skeleton, big black afro with a golden crown on top, pink heart-shaped sunglasses, wide open grinning skull jaw, huge fluffy orange fur coat over a black suit, blue cravat, pink pants with flower pattern, his cane sword: a perfectly straight, thin, unbent silver blade with a purple curved cane handle", 'sword', 'icy blue souls'),
     'jinbe': ("Jinbe", "massive whale-like fishman with a huge round barrel body, very wide and bulky with a big belly, short thick legs, huge thick arms, light blue skin, two big white tusks, black topknot hair, orange kimono with blue patterns, red haori, purple sash, wooden sandals", 'punch', 'water'),
     'akainu': ("Admiral Akainu", "tall broad-shouldered middle-aged man with a fierce scowling square-jawed face, heavy furrowed brow, short black hair, Marine officer cap with a gold seagull emblem, dark red pinstripe suit with a pink rose on the lapel, white Marine coat draped over his shoulders like a cape, fists glowing with red-hot magma, his Marine cap is white with a dark navy brim and a gold emblem", 'punch', 'red glowing magma'),
-    'kizaru': ("Admiral Kizaru", "middle-aged man around fifty with some wrinkles on his forehead and smile lines on his cheeks, short cropped jet black hair (no grey), short black stubble beard on his chin and upper lip, black sunglasses, eyebrows slanting downward toward the outer edges (droopy and relaxed, not angry), calm easygoing smile, yellow pinstripe suit with gold buttons, white Marine coat with gold epaulettes over his shoulders", 'kick', 'golden light'),
+    'kizaru': ("Admiral Kizaru", "middle-aged man with a long face, forehead wrinkles and smile lines, short wavy jet black hair with sideburns, thin black mustache and a short black stubble goatee, wide rectangular aviator-style glasses with a thin gold double-bridge frame and light orange-brown tinted see-through lenses, his droopy relaxed half-lidded eyes clearly visible behind the lenses (NOT dark or black sunglasses), a big cheerful open-mouthed grin showing his teeth, yellow pinstripe double-breasted suit with gold buttons over a green shirt and a purple tie, white Marine coat with gold epaulettes draped over his shoulders, white shoes", 'kick', 'golden light'),
     'aokiji': ("Admiral Aokiji", "very tall slim man, curly black afro hair, sleep mask pushed up on his forehead, white vest over a blue shirt, white pants, white marine coat", 'punch', 'ice crystals'),
     'ace': ("Portgas D. Ace", "freckles, wavy black hair, orange cowboy hat with two small blue and red smiley face badges, shirtless with a red bead necklace, black shorts, brown boots, his mouth is always clearly drawn on his face (a confident grin or determined frown)", 'punch', 'fire'),
     'shanks': ("Red-Haired Shanks", "red hair, three scars over his left eye, stubble, open white shirt, brown pants with a sash, long black cape over shoulders, holding a sword", 'sword', 'red and black lightning'),
@@ -185,6 +185,7 @@ POSE_OVERRIDES = {
     },
     'kizaru': {
         'upper': 'leaping with a rising kick-uppercut of light, his right arm raised high, his left arm bent at his side, both arms clearly visible, both feet off the ground',
+        'ko': 'knocked out lying completely flat on his back on the ground, side view, body stretched out horizontally, head on the floor, dizzy swirly eyes behind his glasses, arms limp at his sides',
     },
     'jinbe': {
         'kick': 'doing a powerful front kick to the right, both arms raised in a fishman karate guard, exactly two arms and two hands',
@@ -272,11 +273,16 @@ USER_REFS = {
     'chopper_mp': 'monster point.jpg',
     'bigmom': 'bigmom.jpg', 'hancock': 'boa.jpg', 'chopper': 'chopper.webp', 'doflamingo': 'doflamingo.jpg',
     'franky': 'franky.jpg', 'garp': 'garp.jpg', 'jinbe': 'jinbei.jpg', 'kaido': 'kaido.jpg',
-    'kizaru': 'light admiral.jpg', 'robin': 'robin.jpg', 'whitebeard': 'whitebeard.png',
+    'kizaru': os.path.join(os.path.dirname(os.path.abspath(__file__)), 'out', 'refs', 'kizaru2_crop.png'),   # owner's correct design (kizaru 2.jpg, logo cropped)
+    'robin': 'robin.jpg', 'whitebeard': 'whitebeard.png',
     'luffy': 'luffy.jpg', 'zoro': 'zoro.jpg', 'nami': 'nami.jpg', 'usopp': 'usopp.jpg', 'sanji': 'sanji.png',
     'brook': 'brook.jpg', 'akainu': 'akainu.png', 'aokiji': 'kuzan.jpg', 'ace': 'ace.jpg', 'shanks': 'shanks.jpg',
     'blackbeard': 'blackbeard.jpg', 'mihawk': 'images.jpg', 'crocodile': 'crocodile.jpg', 'law': 'law.jpg',
 }
+# refs may sit directly in USER_REF_DIR or in its Character/ subfolder (the owner keeps them there now)
+for _k, _v in list(USER_REFS.items()):
+    if not os.path.isabs(_v) and not os.path.exists(os.path.join(USER_REF_DIR, _v)) and os.path.exists(os.path.join(USER_REF_DIR, 'Character', _v)):
+        USER_REFS[_k] = 'Character/' + _v
 
 # Extra sprites (drawn next to a fighter in game)
 EXTRAS = {

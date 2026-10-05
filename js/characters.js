@@ -119,8 +119,8 @@ const ROSTER = [
     quote: "You're not getting away from me!",
     look: { skin: '#f0c8a0', scale: 1.15, build: 'big', hair: { style: 'spiky', color: '#eceff1' }, eyes: 'sharp', mouth: 'calm', top: { style: 'openshirt', color: '#fafafa' }, sleeves: 'long', bottom: { style: 'pants', color: '#1e3a8a' }, coat: { type: 'fur', color: '#fafafa', color2: '#2e7d32' }, shoes: '#6d4c41', weapon: 'staff' },
     s1: { type: 'proj', name: 'White Blow', elem: 'smoke', sprite: 'orb', art: 'smokefist', artK: 3, dmg: 80, speed: 11, r: 40 },
-    s2: { type: 'rush', name: 'White Launcher', elem: 'smoke', dmg: 90 },
-    su: { type: 'pillar', name: 'White Out', elem: 'smoke', art: 'smoketrap' },
+    s2: { type: 'rush', style: 'smokedash', name: 'White Launcher', elem: 'smoke', dmg: 90 },
+    su: { type: 'whiteout', name: 'White Out', elem: 'smoke', art: 'smoketrap' },
   },
   {
     id: 'ace', name: 'ACE', full: 'Portgas D. Ace', group: 2, style: 'punch', elem: 'fire',

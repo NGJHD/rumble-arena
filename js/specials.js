@@ -3,6 +3,20 @@
 // Hooks: d.onFrame(f, fr, g, a) per frame, d.onHit(att, def, res, g) after a melee hit lands.
 
 const SPECIAL_STYLES = {
+  // Smoker White Launcher: turns into a streak of smoke, shoots forward, re-forms where it ends
+  // (built on Zoro's Onigiri: dashes straight through, the hit lands a beat later)
+  smokedash(d, spec) {
+    SPECIAL_STYLES.through(d, Object.assign({}, spec, { single: true }));
+    Object.assign(d, { hidden: [9, 20] });
+    const base = d.onFrame;
+    d.onFrame = (f, fr, g, a) => {
+      base(f, fr, g, a);
+      const cy = f.y - f.height * 0.5;
+      if (fr === 9) FX.smoke(f.x, cy, 18, 'rgba(255,255,255,0.9)');
+      if (fr > 9 && fr < 21) { FX.smoke(f.x, cy + rand(-30, 30), 4, 'rgba(245,247,250,0.85)'); FX.smoke(f.x + f.facing * 40, cy, 2, 'rgba(255,255,255,0.95)'); }
+      if (fr === 21) { FX.smoke(f.x, cy, 20, 'rgba(255,255,255,0.9)'); Sound.play('whoosh'); }
+    };
+  },
   // Marco Crane Talons: a flying talon kick, white claw swooshes in front of his foot
   talon(d, spec) {
     Object.assign(d, { spritePose: 'kick' });
