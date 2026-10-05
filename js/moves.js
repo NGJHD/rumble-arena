@@ -224,7 +224,8 @@ function buildSuper(spec, ch, lvl) {
       return Object.assign(base, {
         startup: 12, active: 2, recovery: 28, pose: 'cast', spawnAt: 12,
         spawn(f, g) {
-          const cp = compPt(f, spec.from), hp = handPt(f), sp = cp ? { x: cp.x - f.facing * 40, y: cp.y + 20 } : hp ? { x: hp.x + f.facing * 30, y: hp.y + 20 } : spawnPt(f);
+          let cp = compPt(f, spec.from), hp = handPt(f), sp = cp ? { x: cp.x - f.facing * 40, y: cp.y + 20 } : hp ? { x: hp.x + f.facing * 30, y: hp.y + 20 } : spawnPt(f);
+          if (spec.fromBehind) sp = { x: f.x - f.facing * ((spec.r || 75) * big + 40), y: sp.y };   // starts behind the fighter so a close enemy still takes every hit
           g.addEnt(new Proj({ owner: f, x: sp.x + f.facing * 40, y: sp.y - 20, vx: f.facing * (spec.speed || 8), r: (spec.r || 75) * big, sprite: spec.sprite || 'orb', art: spec.art, artK: spec.artK, elem: e, hits: lvl === 3 ? 14 : 10, hitEvery: (spec.speed || 8) > 12 ? 2 : 5, life: 220, isSuper: true, clash: true, hit: fin({ dmg: Math.round(26 * m), hitstun: 40, kb: [14, -14], launch: -14 }) }));
           Sound.play('explode'); Sound.elem(e); g.shake(8);
         },

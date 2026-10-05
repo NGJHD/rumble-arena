@@ -115,7 +115,7 @@ const SUPER_TYPES = {
     return Object.assign(X.base, {
       startup: 14, active: 2, recovery: 40, pose: 'charge', spritePose: 'super', spawnAt: 14,
       spawn(f, g) {
-        g.addEnt(new PawBubble({ owner: f, x: f.x + f.facing * 300 * f.hs, life: X.lvl === 3 ? 80 : 66, hits: X.lvl === 3 ? 12 : 9, hitEvery: 5, elem: X.e, isSuper: true,
+        g.addEnt(new PawBubble({ owner: f, x: f.x + f.facing * clamp(Math.abs(f.opp.x - f.x), 170 * f.hs, 420 * f.hs), life: X.lvl === 3 ? 80 : 66, hits: X.lvl === 3 ? 12 : 9, hitEvery: 5, elem: X.e, isSuper: true,
           hit: X.fin({ dmg: Math.round(24 * X.m), hitstun: 44, kb: [10, -16], launch: -16 }) }));
         Sound.elem(X.e); g.shake(6);
       },

@@ -234,7 +234,7 @@ const ROSTER = [
     look: { skin: '#f7d2ad', hair: { style: 'short', color: '#ffd54f' }, hat: { type: 'pirate', color: '#1a1a1a' }, eyes: 'normal', mouth: 'grin', top: { style: 'suit', color: '#1a237e', color2: '#fafafa' }, sleeves: 'long', bottom: { style: 'pants', color: '#90a4ae' }, coat: { type: 'cape', color: '#1a1a1a', color2: '#263238' }, shoes: '#1a1a1a', weapon: 'staff' },
     s1: { type: 'rush', spritePose: 'special', name: 'Dragon Claw', elem: 'haki', dmg: 95 },
     s2: { type: 'wave', name: 'Dragon Breath', elem: 'quake', art: 'dragonbreath', dmg: 85 },
-    su: { type: 'bigproj', spritePose: 'super', name: 'Flame Dragon King', elem: 'fire', sprite: 'fireball', art: 'firedragon', artK: 2.4, r: 120, speed: 9, power: 1.25 },
+    su: { type: 'bigproj', spritePose: 'super', name: 'Flame Dragon King', elem: 'fire', sprite: 'fireball', art: 'firedragon', artK: 2.4, r: 120, speed: 9, power: 1.25, fromBehind: true },
   },
   {
     id: 'yamato', name: 'YAMATO', full: 'Yamato', group: 2, style: 'sword', elem: 'ice',
